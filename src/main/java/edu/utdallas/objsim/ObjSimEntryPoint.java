@@ -1,24 +1,12 @@
-package edu.utdallas.objsim;
-
 /*
- * #%L
- * objsim
- * %%
- * Copyright (C) 2020 The University of Texas at Dallas
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
+ * Copyright (C) UT Dallas - All Rights Reserved.
+ * Unauthorized copying of this file via any medium is
+ * strictly prohibited.
+ * This code base is proprietary and confidential.
+ * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
+
+package edu.utdallas.objsim;
 
 import edu.utdallas.objectutils.Wrapped;
 import edu.utdallas.objsim.commons.DistanceVisitor;
@@ -145,8 +133,7 @@ public class ObjSimEntryPoint {
         for (final InputRecord record : records) {
             Collections.addAll(intersectionTests, record.coveringTests);
         }
-        final File outputDir = new File(this.baseDirectory, "output");
-        final List<InputRecord> w = new LinkedList<>();
+        final File outputDir = new File(this.baseDirectory, "objsim-output");
         for (final InputRecord record : records) {
             final List<String> coveringTests = Arrays.asList(record.coveringTests);
             intersectionTests.retainAll(coveringTests);
@@ -169,24 +156,36 @@ public class ObjSimEntryPoint {
             try (final PrintWriter printWriter = new PrintWriter(new File(patchBaseDir, "raw-dist.csv"));
                  final CSVPrinter csvPrinter = new CSVPrinter(printWriter, CSVFormat.DEFAULT)) {
                 final DistanceVisitor<Double> distanceListener = createDistanceListener(csvPrinter, record.patchId, distanceInfo);
-                if (!visitDistances(coveringTests, isFailingTest, originalSnapshots, patchedSnapshots, distanceListener)) {
-                    w.add(record);
-                }
+                visitDistances(coveringTests, isFailingTest, originalSnapshots, patchedSnapshots, distanceListener);
             }
         }
         if (records.size() > 0) {
             final List<Integer> distanceBasedRankedList = rank(intersectionTests, isFailingTest, distanceInfo);
-            Collections.sort(records, new Comparator<InputRecord>() {
+
+            final List<InputRecord> w = new LinkedList<>();
+
+            L: for (final InputRecord record : records) {
+                for (final int patchId : distanceBasedRankedList) {
+                    if (record.patchId == patchId) {
+                        continue L;
+                    }
+                }
+                w.add(record);
+            }
+
+            final double maxSusp = maxSusp(records, distanceBasedRankedList);
+
+            Collections.sort(w, new Comparator<InputRecord>() {
                 @Override
                 public int compare(final InputRecord r1, final InputRecord r2) {
-                    return Double.compare(r1.suspVal, r2.patchId);
+                    return Double.compare(r2.suspVal, r1.suspVal);
                 }
             });
-            final double maxSusp = maxSusp(records, distanceBasedRankedList);
-            final Iterator<InputRecord> irIt = records.iterator();
+            final Iterator<InputRecord> irIt = w.iterator();
+
             try (final PrintWriter ordering = new PrintWriter(new File(outputDir, "ranking.txt"))) {
-                InputRecord record = irIt.next();
-                while (record != null && record.suspVal <= maxSusp) {
+                InputRecord record = irIt.hasNext() ? irIt.next() : null;
+                while (record != null && record.suspVal >= maxSusp) {
                     ordering.println(record.patchId);
                     record = irIt.hasNext() ? irIt.next() : null;
                 }

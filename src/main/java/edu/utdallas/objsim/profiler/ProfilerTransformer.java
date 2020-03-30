@@ -1,24 +1,12 @@
-package edu.utdallas.objsim.profiler;
-
 /*
- * #%L
- * objsim
- * %%
- * Copyright (C) 2020 The University of Texas at Dallas
- * %%
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- * 
- *      http://www.apache.org/licenses/LICENSE-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * #L%
+ * Copyright (C) UT Dallas - All Rights Reserved.
+ * Unauthorized copying of this file via any medium is
+ * strictly prohibited.
+ * This code base is proprietary and confidential.
+ * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
+
+package edu.utdallas.objsim.profiler;
 
 import javassist.CannotCompileException;
 import javassist.ClassPool;
@@ -35,12 +23,15 @@ import java.security.ProtectionDomain;
 
 import static edu.utdallas.objsim.commons.MemberNameUtils.decomposeMethodName;
 
+/**
+ * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
+ */
 public class ProfilerTransformer implements ClassFileTransformer {
     private static final String RELOCATED_ARRAY_UTILS =
-            "edu.utdallas.validator.reloc.apache.commons.lang3.ArrayUtils";
+            "edu.utdallas.objsim.reloc.apache.commons.lang3.ArrayUtils";
 
     private static final String SNAPSHOT_TRACKER =
-            "edu.utdallas.validator.profiler.SnapshotTracker";
+            "edu.utdallas.objsim.profiler.SnapshotTracker";
 
     private final ClassPool classPool;
 

@@ -30,9 +30,7 @@
         <url>https://engineering.utdallas.edu/</url>
     </organization>
 
-    <inceptionYear>
-        2020
-    </inceptionYear>
+    <inceptionYear>2020</inceptionYear>
 
     <dependencies>
         <dependency>
@@ -138,33 +136,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>1.6</version>
-                <configuration>
-                    <verbose>false</verbose>
-                    <includes>
-                        <includes>**/*.java</includes>
-                    </includes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-license-headers</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                            <licenseName>apache_v2</licenseName>
-                            <roots>
-                                <root>src/main/java</root>
-                                <root>src/test/java</root>
-                            </roots>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
