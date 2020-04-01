@@ -9,6 +9,7 @@
 package edu.utdallas.objsim;
 
 import edu.utdallas.objectutils.Wrapped;
+import edu.utdallas.objectutils.WrappedObjectArray;
 import edu.utdallas.objsim.commons.DistanceVisitor;
 import edu.utdallas.objsim.commons.LoggerUtils;
 import edu.utdallas.objsim.commons.MemberNameUtils;
@@ -356,35 +357,52 @@ public class ObjSimEntryPoint {
         };
     }
 
-    private boolean visitDistances(final List<String> coveringTests,
-                                   final Predicate<String> isFailingTest,
-                                   final Map<String, Wrapped[]> originalSnapshots,
-                                   final Map<String, Wrapped[]> patchedSnapshots,
-                                   final DistanceVisitor<Double> distanceVisitor) {
-        final List<Pair<Integer, Double>> w = new LinkedList<>();
+    private void visitDistances(final List<String> coveringTests,
+                                final Predicate<String> isFailingTest,
+                                final Map<String, Wrapped[]> originalSnapshots,
+                                final Map<String, Wrapped[]> patchedSnapshots,
+                                final DistanceVisitor<Double> distanceVisitor) {
         for (final String testName : coveringTests) {
             final Wrapped[] os = originalSnapshots.get(testName);
             final Wrapped[] ps = patchedSnapshots.get(testName);
             final boolean wasFailing = isFailingTest.apply(testName);
 
             if (os.length != ps.length) {
-                return false;
-            } else {
-                for (int i = 0; i < os.length; i++) {
-                    final double distance;
-                    final Wrapped original = os[i];
-                    final Wrapped patched = ps[i];
+                break;
+            }
 
-                    if (original.equals(patched)) {
-                        distance = 0;
-                    } else {
-                        distance = original.distance(patched);
-                    }
-                    distanceVisitor.visitDistance(testName, wasFailing, distance);
-                }
+            for (int i = 0; i < os.length; i++) {
+                final double distance;
+                final Wrapped original = os[i];
+                final Wrapped patched = ps[i];
+
+                distance = calculateDistance(original, patched);
+                distanceVisitor.visitDistance(testName, wasFailing, distance);
             }
         }
-        return true;
+    }
+
+    private static double calculateDistance(final Wrapped w1, final Wrapped w2) {
+        if (w1.getClass() != w2.getClass()) {
+            throw new IllegalArgumentException();
+        }
+        if (!(w1 instanceof WrappedObjectArray)) {
+            throw new IllegalArgumentException();
+        }
+        final Wrapped[] vals1 = ((WrappedObjectArray) w1).getValues();
+        final Wrapped[] vals2 = ((WrappedObjectArray) w2).getValues();
+        if (vals1.length != vals2.length) {
+            throw new IllegalArgumentException();
+        }
+        final int len = vals1.length;
+        double dist = 0;
+        for (int i = 0; i < len; i++) {
+            dist += vals1[i].distance(vals2[i]);
+            if (Double.isInfinite(dist)) {
+                return Double.POSITIVE_INFINITY;
+            }
+        }
+        return dist;
     }
 
     private void saveSnapshots(final File patchBaseDir,
