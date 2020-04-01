@@ -45,7 +45,7 @@ public class ProfilerTransformer implements ClassFileTransformer {
             return null; // no transformation
         }
         final ClassReader classReader = new ClassReader(classfileBuffer);
-        final ClassWriter classWriter = new ClassWriter(0);
+        final ClassWriter classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
         final ClassVisitor classVisitor =
                 new TransformerClassVisitor(classWriter, this.patchedMethodFullName);
         classReader.accept(classVisitor, 0);

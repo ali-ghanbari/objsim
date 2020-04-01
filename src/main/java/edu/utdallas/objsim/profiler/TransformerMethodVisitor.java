@@ -30,6 +30,7 @@ import static org.objectweb.asm.Opcodes.POP;
 import static org.objectweb.asm.Opcodes.RETURN;
 import static org.objectweb.asm.Opcodes.SIPUSH;
 import static org.objectweb.asm.Opcodes.SWAP;
+import static org.objectweb.asm.Opcodes.CHECKCAST;
 
 public class TransformerMethodVisitor extends MethodVisitor {
     private final boolean isStatic;
@@ -55,20 +56,27 @@ public class TransformerMethodVisitor extends MethodVisitor {
     public void visitCode() {
         super.visitCode();
         onMethodEnter();
-        visitLabel(this.startFinally);
+        super.visitLabel(this.startFinally);
     }
 
     private void onMethodEnter() {
         // nothing
     }
 
-    private void onMethodExit() {
+    private void onMethodExit(boolean normal) {
         final int arraySize = calculateArraySize();
         pushInteger(arraySize);
         super.visitTypeInsn(ANEWARRAY, "java/lang/Object");
         int arrayIndex = 0;
-        if (isNonVoidMethod()) {
+        if (normal && isNonVoidMethod()) {
             putReturnValue(arrayIndex++);
+        } else if (!normal) {
+            // saving throwable object
+            super.visitInsn(DUP_X1);
+            super.visitInsn(SWAP);
+            pushInteger(arrayIndex++);
+            super.visitInsn(SWAP);
+            super.visitInsn(AASTORE);
         }
         int paramIndex = 0;
         if (!this.isStatic) {
@@ -88,10 +96,20 @@ public class TransformerMethodVisitor extends MethodVisitor {
                 "submitSystemState", "([Ljava/lang/Object;)V",
                 false);
         // revive return value
-        if (isNonVoidMethod()) {
+        if (normal && isNonVoidMethod()) {
             super.visitInsn(ICONST_0);
             super.visitInsn(AALOAD);
             unWrapTopOfStack(this.retType);
+            switch (this.retType.getSort()) {
+                case Type.ARRAY:
+                case Type.OBJECT:
+                case Type.METHOD:
+                    super.visitTypeInsn(CHECKCAST, this.retType.getInternalName());
+            }
+        } else if (!normal) {
+            super.visitInsn(ICONST_0);
+            super.visitInsn(AALOAD);
+            super.visitTypeInsn(CHECKCAST, "java/lang/Throwable");
         } else {
             super.visitInsn(POP); // array reference
         }
@@ -276,7 +294,7 @@ public class TransformerMethodVisitor extends MethodVisitor {
     @Override
     public void visitInsn(int opcode) {
         if (isReturnInst(opcode)) {
-            onMethodExit();
+            onMethodExit(true);
         }
         super.visitInsn(opcode);
     }
@@ -284,10 +302,10 @@ public class TransformerMethodVisitor extends MethodVisitor {
     @Override
     public void visitMaxs(int maxStack, int maxLocals) {
         final Label endFinally = new Label();
-        visitTryCatchBlock(this.startFinally, endFinally, endFinally, null);
-        visitLabel(endFinally);
-        onMethodExit();
-        visitInsn(ATHROW);
+        super.visitTryCatchBlock(this.startFinally, endFinally, endFinally, null);
+        super.visitLabel(endFinally);
+        onMethodExit(false);
+        super.visitInsn(ATHROW);
         int maxSz = Math.max(0, this.retType.getSize());
         for (final Type pt : this.paramTypes) {
             maxSz = Math.max(maxSz, pt.getSize());
