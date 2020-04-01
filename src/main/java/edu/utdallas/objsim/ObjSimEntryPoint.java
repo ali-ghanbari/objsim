@@ -430,7 +430,7 @@ public class ObjSimEntryPoint {
     private ProcessArgs getDefaultProcessArgs() {
         final LaunchOptions defaultLaunchOptions = new LaunchOptions(getJavaAgent(),
                 getDefaultJavaExecutableLocator(),
-                Collections.<String>emptyList(),
+                Arrays.asList("-Xmx32g", "-XX:MaxPermSize=8g"),
                 Collections.<String, String>emptyMap());
         return ProcessArgs.withClassPath(this.classPath)
                 .andLaunchOptions(defaultLaunchOptions)
