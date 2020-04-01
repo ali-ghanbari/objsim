@@ -13,6 +13,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -53,6 +54,28 @@ public final class MemberNameUtils {
         final String className = qualifiedMethodName.substring(0, indexOfLastDot);
         final String methodName = qualifiedMethodName.substring(1 + indexOfLastDot);
         return new ImmutablePair<>(className, methodName);
+    }
+
+    public static String composeMethodFullName(final String owner, final String name, final String descriptor) {
+        return owner.replace('/', '.') +
+                '.' +
+                name +
+                '(' +
+                joinParamTypes(Type.getArgumentTypes(descriptor)) +
+                ')';
+    }
+
+    public static String joinParamTypes(Type[] paramTypes) {
+        StringBuilder pt = new StringBuilder();
+        final int iMax = paramTypes.length - 1;
+        for (int i = 0; iMax >= 0; i++) {
+            pt.append(paramTypes[i].getClassName());
+            if (i == iMax) {
+                return pt.toString();
+            }
+            pt.append(",");
+        }
+        return "";
     }
 
     public static String getClassName(final File classFile) {
