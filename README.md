@@ -113,7 +113,7 @@ you will be able to review the raking results.
 **Step 2:** You can use the following command to print out the ranking
 results.
 ```shell script
-cat objsim-output/raning.txt
+cat objsim-output/ranking.txt
 ```
 You should be able to see the patch numbers sorted in the following order.
 ```text
@@ -150,7 +150,7 @@ you will be able to review the raking results.
 **Step 2:** You can use the following command to print out the ranking
 results.
 ```shell script
-cat objsim-output/raning.txt
+cat objsim-output/ranking.txt
 ```
 You should be able to see the patch numbers sorted in the following order.
 ```text
