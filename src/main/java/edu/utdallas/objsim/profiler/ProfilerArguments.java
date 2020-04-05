@@ -5,7 +5,6 @@
  * This code base is proprietary and confidential.
  * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
-
 package edu.utdallas.objsim.profiler;
 
 import org.apache.commons.lang3.Validate;
@@ -14,9 +13,12 @@ import java.io.Serializable;
 import java.util.Collection;
 
 /**
+ * A bundle of information that is transferred to the child process once it is created.
+ * !Internal use only!
+ *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
-public class ProfilerArguments implements Serializable {
+class ProfilerArguments implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private final String patchedMethodName;

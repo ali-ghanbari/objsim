@@ -10,11 +10,7 @@
 
     <packaging>maven-plugin</packaging>
 
-    <properties>
-        <pit.version>1.3.2</pit.version>
-        <junit.version>4.12</junit.version>
-        <license.licenseName>apache_v2</license.licenseName>
-    </properties>
+    <description>A lightweight automatic patch prioritization system based on object similarity</description>
 
     <developers>
         <developer>
@@ -31,6 +27,12 @@
     </organization>
 
     <inceptionYear>2020</inceptionYear>
+
+    <properties>
+        <pit.version>1.3.2</pit.version>
+        <asm.version>7.0</asm.version>
+        <junit.version>4.12</junit.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -51,7 +53,7 @@
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
-            <version>7.0</version>
+            <version>${asm.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -157,6 +159,12 @@
                                     <excludes>
                                         <exclude>org/objectweb/**</exclude>
                                         <exclude>org/pitest/classinfo/**</exclude>
+                                    </excludes>
+                                </filter>
+                                <filter>
+                                    <artifact>org.pitest:pitest</artifact>
+                                    <excludes>
+                                        <exclude>org/pitest/reloc/asm/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>

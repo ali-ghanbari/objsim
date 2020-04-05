@@ -5,7 +5,6 @@
  * This code base is proprietary and confidential.
  * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
-
 package edu.utdallas.objsim.profiler;
 
 import edu.utdallas.objectutils.Wrapped;
@@ -20,6 +19,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Communication thread used for transferring information to/from the child process.
+ * !Internal use only!
+ *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 class ProfilerCommunicationThread extends CommunicationThread {

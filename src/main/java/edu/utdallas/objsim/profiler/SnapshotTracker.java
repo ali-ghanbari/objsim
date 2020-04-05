@@ -5,7 +5,6 @@
  * This code base is proprietary and confidential.
  * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
-
 package edu.utdallas.objsim.profiler;
 
 import edu.utdallas.objectutils.Wrapped;
@@ -15,6 +14,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * A class used for recording system state.
+ * !Internal use only!
+ *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 public final class SnapshotTracker {

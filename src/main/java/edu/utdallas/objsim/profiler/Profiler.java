@@ -5,17 +5,19 @@
  * This code base is proprietary and confidential.
  * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
-
 package edu.utdallas.objsim.profiler;
 
 import edu.utdallas.objectutils.Wrapped;
-import edu.utdallas.objsim.commons.MemberNameUtils;
+import edu.utdallas.objsim.commons.misc.MemberNameUtils;
 import edu.utdallas.objsim.junit.runner.JUnitRunner;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.runner.manipulation.Filter;
 import org.pitest.boot.HotSwapAgent;
+import org.pitest.classinfo.CachingByteArraySource;
+import org.pitest.classinfo.ClassByteArraySource;
+import org.pitest.classpath.ClassloaderByteArraySource;
 import org.pitest.functional.Option;
 import org.pitest.junit.DescriptionFilter;
 import org.pitest.junit.adapter.AdaptedJUnitTestUnit;
@@ -24,6 +26,7 @@ import org.pitest.testapi.Description;
 import org.pitest.testapi.ResultCollector;
 import org.pitest.testapi.TestUnit;
 import org.pitest.util.ExitCode;
+import org.pitest.util.IsolationUtils;
 import org.pitest.util.SafeDataInputStream;
 
 import java.io.File;
@@ -38,12 +41,19 @@ import java.util.Map;
 
 import static org.junit.runner.Description.createTestDescription;
 
-import static edu.utdallas.objsim.commons.MemberNameUtils.decomposeMethodName;
+import static edu.utdallas.objsim.commons.misc.MemberNameUtils.decomposeMethodName;
 
 /**
+ * Entry point for Profiler.
+ * Profiler is responsible for running test cases against original and patched versions
+ * of the program and returning the system state at the exit point(s) of the specified
+ * method.
+ *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 public final class Profiler {
+    private static final int CACHE_SIZE = 50;
+
     private Profiler() {
 
     }
@@ -56,7 +66,11 @@ public final class Profiler {
 
             final ProfilerArguments arguments = dis.read(ProfilerArguments.class);
 
-            HotSwapAgent.addTransformer(new ProfilerTransformer(arguments.getPatchedMethodName()));
+            final ClassLoader contextClassLoader = IsolationUtils.getContextClassLoader();
+            ClassByteArraySource byteArraySource = new ClassloaderByteArraySource(contextClassLoader);
+            byteArraySource = new CachingByteArraySource(byteArraySource, CACHE_SIZE);
+
+            HotSwapAgent.addTransformer(new ProfilerTransformer(arguments.getPatchedMethodName(), byteArraySource));
 
             final ProfilerReporter reporter = new ProfilerReporter(socket.getOutputStream());
 

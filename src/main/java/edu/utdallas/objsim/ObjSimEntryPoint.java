@@ -5,21 +5,18 @@
  * This code base is proprietary and confidential.
  * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
-
 package edu.utdallas.objsim;
 
 import edu.utdallas.objectutils.Wrapped;
 import edu.utdallas.objectutils.WrappedObjectArray;
 import edu.utdallas.objsim.commons.DistanceVisitor;
-import edu.utdallas.objsim.commons.LoggerUtils;
-import edu.utdallas.objsim.commons.MemberNameUtils;
+import edu.utdallas.objsim.commons.process.LoggerUtils;
 import edu.utdallas.objsim.profiler.Profiler;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.ImmutableTriple;
 import org.apache.commons.lang3.tuple.Pair;
@@ -59,6 +56,8 @@ import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 /**
+ * Entry point for our patch prioritization system!
+ *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 public class ObjSimEntryPoint {
@@ -70,6 +69,8 @@ public class ObjSimEntryPoint {
 
     private final File compatibleJREHome;
 
+    private final List<String> childJVMArgs;
+
     private final File inputCSVFile;
 
     private final Set<String> failingTests;
@@ -78,44 +79,55 @@ public class ObjSimEntryPoint {
                              final ClassPath classPath,
                              final ClassByteArraySource byteArraySource,
                              final File compatibleJREHome,
+                             final List<String> childJVMArgs,
                              final File inputCSVFile,
                              final Set<String> failingTests) {
         this.baseDirectory = baseDirectory;
         this.classPath = classPath;
         this.byteArraySource = byteArraySource;
         this.compatibleJREHome = compatibleJREHome;
+        this.childJVMArgs = childJVMArgs;
         this.inputCSVFile = inputCSVFile;
         this.failingTests = failingTests;
     }
 
     public static ObjSimEntryPoint createEntryPoint() {
-        return new ObjSimEntryPoint(null, null, null, null, null, null);
+        return new ObjSimEntryPoint(null, null, null, null, null, null, null);
     }
 
     public ObjSimEntryPoint withBaseDirectory(final File baseDirectory) {
-        return new ObjSimEntryPoint(baseDirectory, this.classPath, this.byteArraySource, this.compatibleJREHome, this.inputCSVFile, this.failingTests);
+        return new ObjSimEntryPoint(baseDirectory, this.classPath, this.byteArraySource, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
     }
 
     public ObjSimEntryPoint withClassPath(final ClassPath classPath) {
-        return new ObjSimEntryPoint(this.baseDirectory, classPath, this.byteArraySource, this.compatibleJREHome, this.inputCSVFile, this.failingTests);
+        return new ObjSimEntryPoint(this.baseDirectory, classPath, this.byteArraySource, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
     }
 
     public ObjSimEntryPoint withClassByteArraySource(final ClassByteArraySource byteArraySource) {
-        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, byteArraySource, this.compatibleJREHome, this.inputCSVFile, this.failingTests);
+        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, byteArraySource, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
     }
 
     public ObjSimEntryPoint withCompatibleJREHome(final File compatibleJREHome) {
-        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, compatibleJREHome, this.inputCSVFile, this.failingTests);
+        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
+    }
+
+    public ObjSimEntryPoint withChildJVMArgs(final List<String> childJVMArgs) {
+        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.compatibleJREHome, childJVMArgs, this.inputCSVFile, this.failingTests);
     }
 
     public ObjSimEntryPoint withInputCSVFile(final File inputCSVFile) {
-        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.compatibleJREHome, inputCSVFile, this.failingTests);
+        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.compatibleJREHome, this.childJVMArgs, inputCSVFile, this.failingTests);
     }
 
     public ObjSimEntryPoint withFailingTests(final Set<String> failingTests) {
-        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.compatibleJREHome, this.inputCSVFile, failingTests);
+        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, failingTests);
     }
 
+    /**
+     * Entry point for the entire system!
+     *
+     * @throws Exception Any failure
+     */
     public void run() throws Exception {
         final List<InputRecord> records = new LinkedList<>();
         try (final Reader fr = new FileReader(this.inputCSVFile);
@@ -135,6 +147,9 @@ public class ObjSimEntryPoint {
             Collections.addAll(intersectionTests, record.coveringTests);
         }
         final File outputDir = new File(this.baseDirectory, "objsim-output");
+        if (outputDir.isDirectory()) {
+            FileUtils.deleteDirectory(outputDir);
+        }
         for (final InputRecord record : records) {
             final List<String> coveringTests = Arrays.asList(record.coveringTests);
             intersectionTests.retainAll(coveringTests);
@@ -234,26 +249,17 @@ public class ObjSimEntryPoint {
         return max;
     }
 
-    private double minimumDistance(final String testName,
+    private double averageDistance(final String testName,
                                    final List<Pair<String, Double>> list) {
-        double min = Double.POSITIVE_INFINITY;
+        double sum = 0;
+        int count = 0;
         for (final Pair<String, Double> pair : list) {
             if (pair.getLeft().equals(testName)) {
-                min = Math.min(min, pair.getRight());
+                sum += pair.getRight();
+                count++;
             }
         }
-        return min;
-    }
-
-    private double maximumDistance(final String testName,
-                                   final List<Pair<String, Double>> list) {
-        double max = Double.NEGATIVE_INFINITY;
-        for (final Pair<String, Double> pair : list) {
-            if (pair.getLeft().equals(testName)) {
-                max = Math.max(max, pair.getRight());
-            }
-        }
-        return max;
+        return sum / count;
     }
 
     private static Comparator<Pair<Integer, Double>> ascendingOrderer() {
@@ -281,11 +287,8 @@ public class ObjSimEntryPoint {
         for (final Map.Entry<Integer, List<Pair<String, Double>>> entry : infoMap.entrySet()) {
             final int patchId = entry.getKey();
             final double distance;
-            if (isFailing) { // in this case bigger distance would be desirable so we pick the worst (minimum)
-                distance = minimumDistance(testName, entry.getValue());
-            } else { // in this case smaller distance would better so we pick worst (maximum)
-                distance = maximumDistance(testName, entry.getValue());
-            }
+            // calculating min/max based on test being failed/passed could also be possible
+            distance = averageDistance(testName, entry.getValue());
             vector.add(new ImmutablePair<>(patchId, distance));
         }
         if (isFailing) {
@@ -376,13 +379,15 @@ public class ObjSimEntryPoint {
                 final Wrapped original = os[i];
                 final Wrapped patched = ps[i];
 
-                distance = calculateDistance(original, patched);
+                distance = calculateDistance(original, patched, wasFailing);
                 distanceVisitor.visitDistance(testName, wasFailing, distance);
             }
         }
     }
 
-    private static double calculateDistance(final Wrapped w1, final Wrapped w2) {
+    private static double calculateDistance(final Wrapped w1,
+                                            final Wrapped w2,
+                                            final boolean wasFailing) {
         if (w1.getClass() != w2.getClass()) {
             throw new IllegalArgumentException();
         }
@@ -396,7 +401,7 @@ public class ObjSimEntryPoint {
         }
         final int len = vals1.length;
         double dist = 0;
-        for (int i = 0; i < len; i++) {
+        for (int i = wasFailing ? 1 : 0; i < len; i++) {
             dist += vals1[i].distance(vals2[i]);
             if (Double.isInfinite(dist)) {
                 return Double.POSITIVE_INFINITY;
@@ -448,7 +453,7 @@ public class ObjSimEntryPoint {
     private ProcessArgs getDefaultProcessArgs() {
         final LaunchOptions defaultLaunchOptions = new LaunchOptions(getJavaAgent(),
                 getDefaultJavaExecutableLocator(),
-                Arrays.asList("-Xmx32g", "-XX:MaxPermSize=8g"),
+                this.childJVMArgs,
                 Collections.<String, String>emptyMap());
         return ProcessArgs.withClassPath(this.classPath)
                 .andLaunchOptions(defaultLaunchOptions)
@@ -466,42 +471,5 @@ public class ObjSimEntryPoint {
                 .getJarLocation()
                 .value();
         return new KnownLocationJavaAgentFinder(jarLocation);
-    }
-
-    private static final class InputRecord {
-        final int patchId;
-
-        final double suspVal;
-
-        final String patchedMethod; // full name
-
-        final File classFile;
-
-        final String[] coveringTests;
-
-        private InputRecord(final int patchId,
-                            final double suspVal,
-                            final String patchedMethod,
-                            final File classFile,
-                            final String[] coveringTests) {
-            this.patchId = patchId;
-            this.suspVal = suspVal;
-            this.patchedMethod = patchedMethod;
-            this.classFile = classFile;
-            this.coveringTests = coveringTests;
-        }
-
-        static InputRecord fromCSVRecord(final CSVRecord record) {
-            Validate.isTrue(record.size() == 5);
-            final int patchId = Integer.parseInt(record.get(0));
-            final double suspVal = Double.parseDouble(record.get(1));
-            final String patchedMethod = record.get(2);
-            final File classFile = new File(record.get(3));
-            final String[] coveringTests = record.get(4).split("\\s");
-            for  (int i = 0; i < coveringTests.length; i++) {
-                coveringTests[i] = MemberNameUtils.sanitizeTestName(coveringTests[i]);
-            }
-            return new InputRecord(patchId, suspVal, patchedMethod, classFile, coveringTests);
-        }
     }
 }

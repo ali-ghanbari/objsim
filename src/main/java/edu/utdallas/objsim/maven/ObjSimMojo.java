@@ -5,13 +5,14 @@
  * This code base is proprietary and confidential.
  * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
-
 package edu.utdallas.objsim.maven;
 
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
+ * Maven plugin Mojo for our awesome patch prioritization system!
+ *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 @Mojo(name = "validate", requiresDependencyResolution = ResolutionScope.TEST)

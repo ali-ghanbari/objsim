@@ -5,12 +5,14 @@
  * This code base is proprietary and confidential.
  * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
-
-package edu.utdallas.objsim.commons;
+package edu.utdallas.objsim.commons.process;
 
 import org.pitest.functional.SideEffect1;
 
 /**
+ * A data race-avoiding classed used for printing process results on the screen.
+ * !Internal use only!
+ *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 public final class LoggerUtils {

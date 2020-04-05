@@ -5,8 +5,7 @@
  * This code base is proprietary and confidential.
  * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
-
-package edu.utdallas.objsim.commons;
+package edu.utdallas.objsim.commons.misc;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 /**
+ * Utility functions for manipulating identifiers of class members, i.e. methods and fields.
+ *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 public final class MemberNameUtils {
@@ -27,8 +28,19 @@ public final class MemberNameUtils {
 
     }
 
+    /**
+     * A method for sanitizing test names.
+     * !For internal use only!
+     *
+     * @param name Test name
+     * @return Sanitized test name
+     */
     public static String sanitizeExtendedTestName(String name) {
-        name = name.substring(1 + name.indexOf(' '));
+        final int indexOfSp = name.indexOf(' ');
+        if (indexOfSp < 0) {
+            sanitizeTestName(name);
+        }
+        name = name.substring(1 + indexOfSp);
         final int indexOfLP = name.indexOf('(');
         if (indexOfLP >= 0) {
             final String testCaseName = name.substring(0, indexOfLP);
@@ -37,6 +49,13 @@ public final class MemberNameUtils {
         return name;
     }
 
+    /**
+     * A method for sanitizing test names.
+     * !For internal use only!
+     *
+     * @param name Test name
+     * @return Sanitized test name
+     */
     public static String sanitizeTestName(String name) {
         //SETLab style: test.class.name:test_name
         name = name.replace(':', '.');
@@ -49,6 +68,12 @@ public final class MemberNameUtils {
         return name;
     }
 
+    /**
+     * Decomposes a fully qualified method name into class name and method name.
+     *
+     * @param qualifiedMethodName Fully qualified method name
+     * @return (c, n) where c is class name and n is the method name
+     */
     public static Pair<String, String> decomposeMethodName(final String qualifiedMethodName) {
         final int indexOfLastDot = qualifiedMethodName.lastIndexOf('.');
         final String className = qualifiedMethodName.substring(0, indexOfLastDot);
@@ -61,43 +86,41 @@ public final class MemberNameUtils {
                 '.' +
                 name +
                 '(' +
-                joinParamTypes(Type.getArgumentTypes(descriptor)) +
+                joinTypeClassNames(Type.getArgumentTypes(descriptor), ",") +
                 ')';
     }
 
-    public static String joinParamTypes(Type[] paramTypes) {
+    /**
+     * Joins class names an array of types using a separator.
+     * Empty string shall be returned for empty array.
+     *
+     * @param types Array of types
+     * @param separator Separator string
+     * @return Resulting string
+     */
+    public static String joinTypeClassNames(final Type[] types, final String separator) {
+        if (types == null || separator == null) {
+            throw new IllegalArgumentException("Input array or separator cannot be null");
+        }
         StringBuilder pt = new StringBuilder();
-        final int iMax = paramTypes.length - 1;
+        final int iMax = types.length - 1;
         for (int i = 0; iMax >= 0; i++) {
-            pt.append(paramTypes[i].getClassName());
+            pt.append(types[i].getClassName());
             if (i == iMax) {
                 return pt.toString();
             }
-            pt.append(",");
+            pt.append(separator);
         }
         return "";
     }
 
+    /**
+     * Given a class file, returns Java name of the class.
+     *
+     * @param classFile Class file on the file system
+     * @return Java name of the class
+     */
     public static String getClassName(final File classFile) {
-        final class NameExtractor extends ClassVisitor {
-            String className;
-
-            public NameExtractor() {
-                super(Opcodes.ASM7);
-            }
-
-            @Override
-            public void visit(final int version,
-                              final int access,
-                              final String name,
-                              final String signature,
-                              final String superName,
-                              final String[] interfaces) {
-                this.className = name.replace('/', '.');
-                super.visit(version, access, name, signature, superName, interfaces);
-            }
-        }
-
         try (final InputStream fis = new FileInputStream(classFile)) {
             final NameExtractor extractor = new NameExtractor();
             final ClassReader cr = new ClassReader(fis);
@@ -105,6 +128,25 @@ public final class MemberNameUtils {
             return extractor.className;
         } catch (Exception e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    private static final class NameExtractor extends ClassVisitor {
+        String className;
+
+        public NameExtractor() {
+            super(Opcodes.ASM7);
+        }
+
+        @Override
+        public void visit(final int version,
+                          final int access,
+                          final String name,
+                          final String signature,
+                          final String superName,
+                          final String[] interfaces) {
+            this.className = name.replace('/', '.');
+            super.visit(version, access, name, signature, superName, interfaces);
         }
     }
 }

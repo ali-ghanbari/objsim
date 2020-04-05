@@ -5,7 +5,6 @@
  * This code base is proprietary and confidential.
  * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
-
 package edu.utdallas.objsim.profiler;
 
 import edu.utdallas.objectutils.Wrapped;
@@ -19,6 +18,9 @@ import java.net.ServerSocket;
 import java.util.Map;
 
 /**
+ * Represents a (running) profiler process.
+ * !Internal use only!
+ *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 class ProfilerProcess {

@@ -5,19 +5,20 @@
  * This code base is proprietary and confidential.
  * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
  */
-
 package edu.utdallas.objsim.junit.runner;
 
 import org.pitest.testapi.Description;
 import org.pitest.testapi.ResultCollector;
 
-import static edu.utdallas.objsim.commons.MemberNameUtils.sanitizeExtendedTestName;
+import static edu.utdallas.objsim.commons.misc.MemberNameUtils.sanitizeExtendedTestName;
 
 /**
+ * A result collector that prints out the name of the test cases as they are executed.
+ *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
-class DefaultResultCollector implements ResultCollector {
-    public DefaultResultCollector() {
+class PrinterResultCollector implements ResultCollector {
+    public PrinterResultCollector() {
     }
 
     @Override
