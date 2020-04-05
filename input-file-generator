@@ -1,0 +1,11 @@
+#!/bin/bash
+
+## This bash script is intended to generate input CSV file for a Maven-based project
+## on which PraPR is already applied.
+## You will need JDK 1.8 installed on your computer for the Java program responsible
+## for extracting the information and constructing the CSV file is written in Java 8.
+
+## Usage:
+## input-file-generator path/to/the/base/report/directory/generated/by/PraPR/
+
+$JAVA_HOME/bin/java -jar input-csv-ctor-1.0.jar $1

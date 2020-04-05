@@ -1,0 +1,40 @@
+Manifest-Version: 1.0
+Bnd-LastModified: 1586032302887
+Build-Jdk: 1.7.0_80
+Built-By: ali
+Bundle-Description: A Java-based implementation of XPath 1.0 that, in ad
+ dition to XML processing, can inspect/modify Java object graphs (the li
+ brary's explicit purpose) and even mixed Java/XML structures.
+Bundle-DocURL: http://commons.apache.org/proper/commons-jxpath/
+Bundle-License: http://www.apache.org/licenses/LICENSE-2.0.txt
+Bundle-ManifestVersion: 2
+Bundle-Name: Apache Commons JXPath
+Bundle-SymbolicName: org.apache.commons.jxpath
+Bundle-Vendor: The Apache Software Foundation
+Bundle-Version: 1.4.0.SNAPSHOT
+Created-By: Apache Maven Bundle Plugin
+Export-Package: org.apache.commons.jxpath;version="1.4.0.SNAPSHOT",org.a
+ pache.commons.jxpath.functions;version="1.4.0.SNAPSHOT",org.apache.comm
+ ons.jxpath.ri;version="1.4.0.SNAPSHOT",org.apache.commons.jxpath.ri.axe
+ s;version="1.4.0.SNAPSHOT",org.apache.commons.jxpath.ri.compiler;versio
+ n="1.4.0.SNAPSHOT",org.apache.commons.jxpath.ri.model;version="1.4.0.SN
+ APSHOT",org.apache.commons.jxpath.ri.model.beans;version="1.4.0.SNAPSHO
+ T",org.apache.commons.jxpath.ri.model.container;version="1.4.0.SNAPSHOT
+ ",org.apache.commons.jxpath.ri.model.dom;version="1.4.0.SNAPSHOT",org.a
+ pache.commons.jxpath.ri.model.dynabeans;version="1.4.0.SNAPSHOT",org.ap
+ ache.commons.jxpath.ri.model.dynamic;version="1.4.0.SNAPSHOT",org.apach
+ e.commons.jxpath.ri.model.jdom;version="1.4.0.SNAPSHOT",org.apache.comm
+ ons.jxpath.ri.parser;version="1.4.0.SNAPSHOT",org.apache.commons.jxpath
+ .servlet;version="1.4.0.SNAPSHOT",org.apache.commons.jxpath.util;versio
+ n="1.4.0.SNAPSHOT",org.apache.commons.jxpath.xml;version="1.4.0.SNAPSHO
+ T"
+Import-Package: javax.servlet;resolution:=optional,javax.servlet.http;re
+ solution:=optional,javax.servlet.jsp;resolution:=optional,javax.xml.par
+ sers;resolution:=optional,javax.xml.transform;resolution:=optional,java
+ x.xml.transform.dom;resolution:=optional,org.apache.commons.beanutils;r
+ esolution:=optional,org.jdom;resolution:=optional,org.jdom.input;resolu
+ tion:=optional,org.w3c.dom;resolution:=optional
+Include-Resource: META-INF/LICENSE.txt=LICENSE.txt,META-INF/NOTICE.txt=N
+ OTICE.txt
+Require-Capability: osgi.ee;filter:="(&(osgi.ee=JavaSE)(version=1.3))"
+Tool: Bnd-2.3.0.201405100607

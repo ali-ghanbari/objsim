@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="maven-antrun-" default="main"  >
+<target name="main">
+  <copy todir="/home/ali/similarity-exps/programs/JXPath/1/target/apidocs/META-INF">
+    <fileset dir="/home/ali/similarity-exps/programs/JXPath/1">
+      <include name="LICENSE.txt"/>
+      <include name="NOTICE.txt"/>
+    </fileset>
+  </copy>
+</target>
+</project>

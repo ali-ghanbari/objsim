@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.jfree.data.xy.junit.DataXYPackageTests" time="0.062" tests="200" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/opt/jdk1.7.0_80/jre/lib/amd64"/>
+    <property name="java.vm.version" value="24.80-b11"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="maven.multiModuleProjectDirectory" value="/home/ali/similarity-exps/programs/Chart/12"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/home/ali/similarity-exps/programs/Chart/12"/>
+    <property name="java.runtime.version" value="1.7.0_80-b15"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="/opt/jdk1.7.0_80/jre/lib/endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="os.name" value="Linux"/>
+    <property name="classworlds.conf" value="/usr/share/maven/bin/m2.conf"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="maven.conf" value="/usr/share/maven/conf"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="51.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="4.15.0-72-generic"/>
+    <property name="library.jansi.path" value="/usr/share/maven/lib/jansi-native"/>
+    <property name="user.home" value="/home/ali"/>
+    <property name="user.timezone" value="America/Chicago"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="java.specification.version" value="1.7"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="user.name" value="ali"/>
+    <property name="java.class.path" value="/usr/share/maven/boot/plexus-classworlds-2.x.jar"/>
+    <property name="java.vm.specification.version" value="1.7"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="/opt/jdk1.7.0_80/jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher surefire:test"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="en"/>
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.7.0_80"/>
+    <property name="java.ext.dirs" value="/opt/jdk1.7.0_80/jre/lib/ext:/usr/java/packages/lib/ext"/>
+    <property name="securerandom.source" value="file:/dev/./urandom"/>
+    <property name="sun.boot.class.path" value="/opt/jdk1.7.0_80/jre/lib/resources.jar:/opt/jdk1.7.0_80/jre/lib/rt.jar:/opt/jdk1.7.0_80/jre/lib/sunrsasign.jar:/opt/jdk1.7.0_80/jre/lib/jsse.jar:/opt/jdk1.7.0_80/jre/lib/jce.jar:/opt/jdk1.7.0_80/jre/lib/charsets.jar:/opt/jdk1.7.0_80/jre/lib/jfr.jar:/opt/jdk1.7.0_80/jre/classes"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="/usr/share/maven"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.CategoryTableXYDatasetTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.CategoryTableXYDatasetTests" time="0"/>
+  <testcase name="testAddSeries" classname="org.jfree.data.xy.junit.CategoryTableXYDatasetTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.CategoryTableXYDatasetTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.DefaultHighLowDatasetTests" time="0.003"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.DefaultHighLowDatasetTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.DefaultHighLowDatasetTests" time="0"/>
+  <testcase name="testGetEndXValue" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testGetEndYValue" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0.002"/>
+  <testcase name="testGetItemCount" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testGetSeriesKey" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testGetSeriesCount" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0.001"/>
+  <testcase name="testGetStartXValue" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testAddSeries" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testGetStartYValue" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testIndexOf" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testGetXValue" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testGetYValue" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0.001"/>
+  <testcase name="testCloning2" classname="org.jfree.data.xy.junit.DefaultIntervalXYDatasetTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.DefaultOHLCDatasetTests" time="0.002"/>
+  <testcase name="testDataRange" classname="org.jfree.data.xy.junit.DefaultOHLCDatasetTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.DefaultOHLCDatasetTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.DefaultOHLCDatasetTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.DefaultTableXYDatasetTests" time="0.003"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.DefaultTableXYDatasetTests" time="0"/>
+  <testcase name="testAddSeries" classname="org.jfree.data.xy.junit.DefaultTableXYDatasetTests" time="0.001"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.DefaultTableXYDatasetTests" time="0"/>
+  <testcase name="testGetSeries" classname="org.jfree.data.xy.junit.DefaultTableXYDatasetTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.DefaultWindDatasetTests" time="0.005"/>
+  <testcase name="testGetSeriesKey" classname="org.jfree.data.xy.junit.DefaultWindDatasetTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.DefaultWindDatasetTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.DefaultWindDatasetTests" time="0.001"/>
+  <testcase name="testIndexOf" classname="org.jfree.data.xy.junit.DefaultWindDatasetTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.DefaultXYDatasetTests" time="0.002"/>
+  <testcase name="testGetSeriesKey" classname="org.jfree.data.xy.junit.DefaultXYDatasetTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.DefaultXYDatasetTests" time="0"/>
+  <testcase name="testAddSeries" classname="org.jfree.data.xy.junit.DefaultXYDatasetTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.DefaultXYDatasetTests" time="0"/>
+  <testcase name="testIndexOf" classname="org.jfree.data.xy.junit.DefaultXYDatasetTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.DefaultXYZDatasetTests" time="0.003"/>
+  <testcase name="testGetSeriesKey" classname="org.jfree.data.xy.junit.DefaultXYZDatasetTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.DefaultXYZDatasetTests" time="0"/>
+  <testcase name="testAddSeries" classname="org.jfree.data.xy.junit.DefaultXYZDatasetTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.DefaultXYZDatasetTests" time="0"/>
+  <testcase name="testIndexOf" classname="org.jfree.data.xy.junit.DefaultXYZDatasetTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.IntervalXYDelegateTests" time="0.002"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.IntervalXYDelegateTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.IntervalXYDelegateTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.MatrixSeriesCollectionTests" time="0.002"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.MatrixSeriesCollectionTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.MatrixSeriesCollectionTests" time="0"/>
+  <testcase name="testGetItemRow" classname="org.jfree.data.xy.junit.MatrixSeriesTests" time="0.001"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.MatrixSeriesTests" time="0"/>
+  <testcase name="testGetItemColumn" classname="org.jfree.data.xy.junit.MatrixSeriesTests" time="0"/>
+  <testcase name="testGetItem" classname="org.jfree.data.xy.junit.MatrixSeriesTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.MatrixSeriesTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.MatrixSeriesTests" time="0.001"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.OHLCDataItemTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.OHLCDataItemTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.OHLCDataItemTests" time="0"/>
+  <testcase name="testAutoPrune" classname="org.jfree.data.xy.junit.TableXYDatasetTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.TableXYDatasetTests" time="0.001"/>
+  <testcase name="testPrune" classname="org.jfree.data.xy.junit.TableXYDatasetTests" time="0.001"/>
+  <testcase name="testRemoveAllValuesForX" classname="org.jfree.data.xy.junit.TableXYDatasetTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.TableXYDatasetTests" time="0"/>
+  <testcase name="test788597" classname="org.jfree.data.xy.junit.TableXYDatasetTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.TableXYDatasetTests" time="0"/>
+  <testcase name="testTableXYDataset" classname="org.jfree.data.xy.junit.TableXYDatasetTests" time="0.001"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.VectorDataItemTests" time="0.002"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.VectorDataItemTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.data.xy.junit.VectorDataItemTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.VectorDataItemTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.VectorSeriesCollectionTests" time="0.002"/>
+  <testcase name="testRemoveSeries" classname="org.jfree.data.xy.junit.VectorSeriesCollectionTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.VectorSeriesCollectionTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.VectorSeriesCollectionTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.VectorSeriesTests" time="0.001"/>
+  <testcase name="testAdd" classname="org.jfree.data.xy.junit.VectorSeriesTests" time="0"/>
+  <testcase name="testSetMaximumItemCount2" classname="org.jfree.data.xy.junit.VectorSeriesTests" time="0"/>
+  <testcase name="testClear" classname="org.jfree.data.xy.junit.VectorSeriesTests" time="0"/>
+  <testcase name="testSetMaximumItemCount" classname="org.jfree.data.xy.junit.VectorSeriesTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.VectorSeriesTests" time="0"/>
+  <testcase name="testAdditionOfDuplicateXValues" classname="org.jfree.data.xy.junit.VectorSeriesTests" time="0"/>
+  <testcase name="testIndexOf2" classname="org.jfree.data.xy.junit.VectorSeriesTests" time="0.001"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.VectorSeriesTests" time="0"/>
+  <testcase name="testIndexOf" classname="org.jfree.data.xy.junit.VectorSeriesTests" time="0"/>
+  <testcase name="testRemove" classname="org.jfree.data.xy.junit.VectorSeriesTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.VectorTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.VectorTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.data.xy.junit.VectorTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.VectorTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XIntervalDataItemTests" time="0.002"/>
+  <testcase name="testConstructor1" classname="org.jfree.data.xy.junit.XIntervalDataItemTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XIntervalDataItemTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XIntervalDataItemTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XIntervalSeriesCollectionTests" time="0.002"/>
+  <testcase name="test1170825" classname="org.jfree.data.xy.junit.XIntervalSeriesCollectionTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XIntervalSeriesCollectionTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XIntervalSeriesCollectionTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0.001"/>
+  <testcase name="testAdd" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0"/>
+  <testcase name="testSetMaximumItemCount2" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0.001"/>
+  <testcase name="testClear" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0"/>
+  <testcase name="testSetMaximumItemCount" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0"/>
+  <testcase name="testAdditionOfDuplicateXValues" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0"/>
+  <testcase name="testGetXHighValue" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0"/>
+  <testcase name="testIndexOf2" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0"/>
+  <testcase name="testGetXLowValue" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0"/>
+  <testcase name="testIndexOf" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0"/>
+  <testcase name="testRemove" classname="org.jfree.data.xy.junit.XIntervalSeriesTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XYBarDatasetTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XYBarDatasetTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XYBarDatasetTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XYCoordinateTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XYCoordinateTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.data.xy.junit.XYCoordinateTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XYCoordinateTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XYDataItemTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XYDataItemTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XYDataItemTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XYIntervalDataItemTests" time="0.002"/>
+  <testcase name="testConstructor1" classname="org.jfree.data.xy.junit.XYIntervalDataItemTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XYIntervalDataItemTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XYIntervalDataItemTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XYIntervalSeriesCollectionTests" time="0.002"/>
+  <testcase name="test1170825" classname="org.jfree.data.xy.junit.XYIntervalSeriesCollectionTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XYIntervalSeriesCollectionTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XYIntervalSeriesCollectionTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0.001"/>
+  <testcase name="testAdd" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0.001"/>
+  <testcase name="testSetMaximumItemCount2" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0"/>
+  <testcase name="testClear" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0"/>
+  <testcase name="testSetMaximumItemCount" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0"/>
+  <testcase name="testAdditionOfDuplicateXValues" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0"/>
+  <testcase name="testIndexOf2" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0"/>
+  <testcase name="testIndexOf" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0"/>
+  <testcase name="testRemove" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0"/>
+  <testcase name="testValues" classname="org.jfree.data.xy.junit.XYIntervalSeriesTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XYIntervalTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XYIntervalTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XYIntervalTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XYSeriesCollectionTests" time="0.001"/>
+  <testcase name="test1170825" classname="org.jfree.data.xy.junit.XYSeriesCollectionTests" time="0"/>
+  <testcase name="testRemoveSeries" classname="org.jfree.data.xy.junit.XYSeriesCollectionTests" time="0"/>
+  <testcase name="testGetSeriesByKey" classname="org.jfree.data.xy.junit.XYSeriesCollectionTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XYSeriesCollectionTests" time="0.001"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XYSeriesCollectionTests" time="0"/>
+  <testcase name="testGetSeries" classname="org.jfree.data.xy.junit.XYSeriesCollectionTests" time="0"/>
+  <testcase name="testIndexOf" classname="org.jfree.data.xy.junit.XYSeriesCollectionTests" time="0"/>
+  <testcase name="testToArray" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0.001"/>
+  <testcase name="testAdd" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testSetMaximumItemCount2" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testAddOrUpdate" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testUpdate2" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testToArrayExample" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testSetMaximumItemCount" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testAddOrUpdate2" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testAdditionOfDuplicateXValues" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testIndexOf2" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testHashCode" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testIndexOf" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testRemove" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testUpdate" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0.001"/>
+  <testcase name="testCloning2" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testCloning3" classname="org.jfree.data.xy.junit.XYSeriesTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.YIntervalDataItemTests" time="0.001"/>
+  <testcase name="testConstructor1" classname="org.jfree.data.xy.junit.YIntervalDataItemTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.YIntervalDataItemTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.YIntervalDataItemTests" time="0.001"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.YIntervalSeriesCollectionTests" time="0.001"/>
+  <testcase name="test1170825" classname="org.jfree.data.xy.junit.YIntervalSeriesCollectionTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.YIntervalSeriesCollectionTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.YIntervalSeriesCollectionTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.YIntervalSeriesTests" time="0.001"/>
+  <testcase name="testAdd" classname="org.jfree.data.xy.junit.YIntervalSeriesTests" time="0"/>
+  <testcase name="testSetMaximumItemCount2" classname="org.jfree.data.xy.junit.YIntervalSeriesTests" time="0"/>
+  <testcase name="testClear" classname="org.jfree.data.xy.junit.YIntervalSeriesTests" time="0"/>
+  <testcase name="testSetMaximumItemCount" classname="org.jfree.data.xy.junit.YIntervalSeriesTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.YIntervalSeriesTests" time="0"/>
+  <testcase name="testAdditionOfDuplicateXValues" classname="org.jfree.data.xy.junit.YIntervalSeriesTests" time="0"/>
+  <testcase name="testIndexOf2" classname="org.jfree.data.xy.junit.YIntervalSeriesTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.YIntervalSeriesTests" time="0"/>
+  <testcase name="testIndexOf" classname="org.jfree.data.xy.junit.YIntervalSeriesTests" time="0"/>
+  <testcase name="testRemove" classname="org.jfree.data.xy.junit.YIntervalSeriesTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.YIntervalTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.YIntervalTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.YIntervalTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.data.xy.junit.YWithXIntervalTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.data.xy.junit.YWithXIntervalTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.data.xy.junit.YWithXIntervalTests" time="0"/>
+</testsuite>

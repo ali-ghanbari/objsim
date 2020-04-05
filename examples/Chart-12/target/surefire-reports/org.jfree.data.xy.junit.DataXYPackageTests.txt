@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.jfree.data.xy.junit.DataXYPackageTests
+-------------------------------------------------------------------------------
+Tests run: 200, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.071 sec - in org.jfree.data.xy.junit.DataXYPackageTests

@@ -1,0 +1,14 @@
+-------------------------------------------------------------------------------
+Test set: org.apache.commons.jxpath.issues.JXPath113Test
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.002 sec <<< FAILURE! - in org.apache.commons.jxpath.issues.JXPath113Test
+testIssue113(org.apache.commons.jxpath.issues.JXPath113Test)  Time elapsed: 0.002 sec  <<< ERROR!
+java.lang.NullPointerException: null
+	at org.apache.commons.jxpath.ri.axes.ChildContext.prepare(ChildContext.java:113)
+	at org.apache.commons.jxpath.ri.axes.ChildContext.setPosition(ChildContext.java:99)
+	at org.apache.commons.jxpath.ri.axes.ChildContext.nextNode(ChildContext.java:87)
+	at org.apache.commons.jxpath.ri.EvalContext.constructIterator(EvalContext.java:181)
+	at org.apache.commons.jxpath.ri.EvalContext.hasNext(EvalContext.java:112)
+	at org.apache.commons.jxpath.JXPathContext.selectNodes(JXPathContext.java:687)
+	at org.apache.commons.jxpath.issues.JXPath113Test.testIssue113(JXPath113Test.java:37)
+

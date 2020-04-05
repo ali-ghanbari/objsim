@@ -1,0 +1,11 @@
+-------------------------------------------------------------------------------
+Test set: org.apache.commons.jxpath.ri.model.dynabeans.LazyDynaBeanTest
+-------------------------------------------------------------------------------
+Tests run: 2, Failures: 0, Errors: 1, Skipped: 0, Time elapsed: 0.007 sec <<< FAILURE! - in org.apache.commons.jxpath.ri.model.dynabeans.LazyDynaBeanTest
+testLazyProperty(org.apache.commons.jxpath.ri.model.dynabeans.LazyDynaBeanTest)  Time elapsed: 0.004 sec  <<< ERROR!
+org.apache.commons.jxpath.JXPathNotFoundException: No value for xpath: /nosuch
+	at org.apache.commons.jxpath.ri.model.NodePointer.verify(NodePointer.java:937)
+	at org.apache.commons.jxpath.ri.JXPathContextReferenceImpl.getValue(JXPathContextReferenceImpl.java:374)
+	at org.apache.commons.jxpath.ri.JXPathContextReferenceImpl.getValue(JXPathContextReferenceImpl.java:315)
+	at org.apache.commons.jxpath.ri.model.dynabeans.LazyDynaBeanTest.testLazyProperty(LazyDynaBeanTest.java:34)
+

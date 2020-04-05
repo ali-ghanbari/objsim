@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="org.jfree.chart.renderer.category.junit.RendererCategoryPackageTests" time="0.086" tests="139" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="/opt/jdk1.7.0_80/jre/lib/amd64"/>
+    <property name="java.vm.version" value="24.80-b11"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="maven.multiModuleProjectDirectory" value="/home/ali/similarity-exps/programs/Chart/12"/>
+    <property name="java.vendor.url" value="http://java.oracle.com/"/>
+    <property name="path.separator" value=":"/>
+    <property name="guice.disable.misplaced.annotation.check" value="true"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="unknown"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="/home/ali/similarity-exps/programs/Chart/12"/>
+    <property name="java.runtime.version" value="1.7.0_80-b15"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
+    <property name="java.endorsed.dirs" value="/opt/jdk1.7.0_80/jre/lib/endorsed"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="os.name" value="Linux"/>
+    <property name="classworlds.conf" value="/usr/share/maven/bin/m2.conf"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="maven.conf" value="/usr/share/maven/conf"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="51.0"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="os.version" value="4.15.0-72-generic"/>
+    <property name="library.jansi.path" value="/usr/share/maven/lib/jansi-native"/>
+    <property name="user.home" value="/home/ali"/>
+    <property name="user.timezone" value="America/Chicago"/>
+    <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
+    <property name="java.specification.version" value="1.7"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="user.name" value="ali"/>
+    <property name="java.class.path" value="/usr/share/maven/boot/plexus-classworlds-2.x.jar"/>
+    <property name="java.vm.specification.version" value="1.7"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.home" value="/opt/jdk1.7.0_80/jre"/>
+    <property name="sun.java.command" value="org.codehaus.plexus.classworlds.launcher.Launcher surefire:test"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="user.language" value="en"/>
+    <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.7.0_80"/>
+    <property name="java.ext.dirs" value="/opt/jdk1.7.0_80/jre/lib/ext:/usr/java/packages/lib/ext"/>
+    <property name="securerandom.source" value="file:/dev/./urandom"/>
+    <property name="sun.boot.class.path" value="/opt/jdk1.7.0_80/jre/lib/resources.jar:/opt/jdk1.7.0_80/jre/lib/rt.jar:/opt/jdk1.7.0_80/jre/lib/sunrsasign.jar:/opt/jdk1.7.0_80/jre/lib/jsse.jar:/opt/jdk1.7.0_80/jre/lib/jce.jar:/opt/jdk1.7.0_80/jre/lib/charsets.jar:/opt/jdk1.7.0_80/jre/lib/jfr.jar:/opt/jdk1.7.0_80/jre/classes"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="maven.home" value="/usr/share/maven"/>
+    <property name="file.separator" value="/"/>
+    <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.cpu.isalist" value=""/>
+  </properties>
+  <testcase name="testCloning_LegendItemToolTipGenerator" classname="org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests" time="0"/>
+  <testcase name="testCloning_LegendItemLabelGenerator" classname="org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests" time="0"/>
+  <testcase name="testGetSeriesURLGenerator" classname="org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests" time="0"/>
+  <testcase name="testGetSeriesItemLabelGenerator" classname="org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests" time="0"/>
+  <testcase name="testCloning_LegendItemURLGenerator" classname="org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests" time="0"/>
+  <testcase name="testCloning1" classname="org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests" time="0"/>
+  <testcase name="testCloning2" classname="org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.AreaRendererTests" time="0.001"/>
+  <testcase name="testGetLegendItemSeriesIndex" classname="org.jfree.chart.renderer.category.junit.AreaRendererTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.AreaRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.AreaRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.AreaRendererTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.BarRendererTests" time="0.001"/>
+  <testcase name="testEventNotification" classname="org.jfree.chart.renderer.category.junit.BarRendererTests" time="0"/>
+  <testcase name="testGetLegendItemSeriesIndex" classname="org.jfree.chart.renderer.category.junit.BarRendererTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.BarRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.BarRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.BarRendererTests" time="0"/>
+  <testcase name="testGetLegendItem" classname="org.jfree.chart.renderer.category.junit.BarRendererTests" time="0.001"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.BarRenderer3DTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.BarRenderer3DTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.BarRenderer3DTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.BarRenderer3DTests" time="0"/>
+  <testcase name="testDrawWithNullInfo" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.004"/>
+  <testcase name="testDrawWithNullMean" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.003"/>
+  <testcase name="testDrawWithNullMinRegular" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.002"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.001"/>
+  <testcase name="testBug1572478Vertical" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.002"/>
+  <testcase name="testDrawWithNullMedian" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.003"/>
+  <testcase name="testDrawWithNullMaxRegular" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.002"/>
+  <testcase name="testGetLegendItemSeriesIndex" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0"/>
+  <testcase name="testDrawWithNullMinOutlier" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0"/>
+  <testcase name="testDrawWithNullQ1" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.003"/>
+  <testcase name="testDrawWithNullQ3" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.002"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0"/>
+  <testcase name="testGetLegendItem" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.001"/>
+  <testcase name="testBug1572478Horizontal" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.002"/>
+  <testcase name="testDrawWithNullMaxOutlier" classname="org.jfree.chart.renderer.category.junit.BoxAndWhiskerRendererTests" time="0.001"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.CategoryStepRendererTests" time="0.002"/>
+  <testcase name="testGetLegendItemSeriesIndex" classname="org.jfree.chart.renderer.category.junit.CategoryStepRendererTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.CategoryStepRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.CategoryStepRendererTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.DefaultCategoryItemRendererTests" time="0.002"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.DefaultCategoryItemRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.DefaultCategoryItemRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.DefaultCategoryItemRendererTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.GanttRendererTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.GanttRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.GanttRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.GanttRendererTests" time="0.001"/>
+  <testcase name="testDrawWithNullInfo" classname="org.jfree.chart.renderer.category.junit.GroupedStackedBarRendererTests" time="0.003"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.GroupedStackedBarRendererTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.GroupedStackedBarRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.GroupedStackedBarRendererTests" time="0.001"/>
+  <testcase name="testDrawWithNullInfo" classname="org.jfree.chart.renderer.category.junit.IntervalBarRendererTests" time="0.003"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.IntervalBarRendererTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.IntervalBarRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.IntervalBarRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.IntervalBarRendererTests" time="0"/>
+  <testcase name="testDrawWithNullInfo" classname="org.jfree.chart.renderer.category.junit.LayeredBarRendererTests" time="0.003"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.LayeredBarRendererTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.LayeredBarRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.LayeredBarRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.LayeredBarRendererTests" time="0"/>
+  <testcase name="testDrawWithNullInfo" classname="org.jfree.chart.renderer.category.junit.LevelRendererTests" time="0.003"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.LevelRendererTests" time="0.001"/>
+  <testcase name="testGetLegendItemSeriesIndex" classname="org.jfree.chart.renderer.category.junit.LevelRendererTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.LevelRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.LevelRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.LevelRendererTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.LineAndShapeRendererTests" time="0.001"/>
+  <testcase name="testGetLegendItemSeriesIndex" classname="org.jfree.chart.renderer.category.junit.LineAndShapeRendererTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.LineAndShapeRendererTests" time="0.001"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.LineAndShapeRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.LineAndShapeRendererTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.LineRenderer3DTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.LineRenderer3DTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.LineRenderer3DTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.LineRenderer3DTests" time="0"/>
+  <testcase name="testDrawWithNullInfo" classname="org.jfree.chart.renderer.category.junit.MinMaxCategoryRendererTests" time="0.004"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.MinMaxCategoryRendererTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.MinMaxCategoryRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.MinMaxCategoryRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.MinMaxCategoryRendererTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.ScatterRendererTests" time="0.002"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.ScatterRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.ScatterRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.ScatterRendererTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.StackedAreaRendererTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.StackedAreaRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.StackedAreaRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.StackedAreaRendererTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.StackedBarRendererTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.StackedBarRendererTests" time="0"/>
+  <testcase name="testHashCode" classname="org.jfree.chart.renderer.category.junit.StackedBarRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.StackedBarRendererTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0.001"/>
+  <testcase name="testCreateStackedValueList1" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0.001"/>
+  <testcase name="testCreateStackedValueList2" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList3" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList4" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList5" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList1a" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList1b" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0.001"/>
+  <testcase name="testCreateStackedValueList1c" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList1d" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList2a" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList2b" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList2c" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList2d" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList3a" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList3b" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList3c" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testCreateStackedValueList3d" classname="org.jfree.chart.renderer.category.junit.StackedBarRenderer3DTests" time="0"/>
+  <testcase name="testDrawWithNullInfo" classname="org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests" time="0.003"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests" time="0.001"/>
+  <testcase name="testDrawWithNullMeanVertical" classname="org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests" time="0.002"/>
+  <testcase name="testDrawWithNullDeviationVertical" classname="org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests" time="0.002"/>
+  <testcase name="testDrawWithNullMeanHorizontal" classname="org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests" time="0.003"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests" time="0"/>
+  <testcase name="testDrawWithNullDeviationHorizontal" classname="org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests" time="0.002"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.StatisticalBarRendererTests" time="0"/>
+  <testcase name="testDrawWithNullInfo" classname="org.jfree.chart.renderer.category.junit.StatisticalLineAndShapeRendererTests" time="0.003"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.StatisticalLineAndShapeRendererTests" time="0"/>
+  <testcase name="test1562759" classname="org.jfree.chart.renderer.category.junit.StatisticalLineAndShapeRendererTests" time="0"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.StatisticalLineAndShapeRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.StatisticalLineAndShapeRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.StatisticalLineAndShapeRendererTests" time="0"/>
+  <testcase name="testSerialization" classname="org.jfree.chart.renderer.category.junit.WaterfallBarRendererTests" time="0.001"/>
+  <testcase name="testCloning" classname="org.jfree.chart.renderer.category.junit.WaterfallBarRendererTests" time="0"/>
+  <testcase name="testHashcode" classname="org.jfree.chart.renderer.category.junit.WaterfallBarRendererTests" time="0"/>
+  <testcase name="testEquals" classname="org.jfree.chart.renderer.category.junit.WaterfallBarRendererTests" time="0"/>
+</testsuite>

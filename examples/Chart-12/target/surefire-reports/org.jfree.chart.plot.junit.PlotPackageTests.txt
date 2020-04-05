@@ -1,0 +1,12 @@
+-------------------------------------------------------------------------------
+Test set: org.jfree.chart.plot.junit.PlotPackageTests
+-------------------------------------------------------------------------------
+Tests run: 146, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.155 sec <<< FAILURE! - in org.jfree.chart.plot.junit.PlotPackageTests
+testConstructor(org.jfree.chart.plot.junit.MultiplePiePlotTests)  Time elapsed: 0.004 sec  <<< FAILURE!
+junit.framework.AssertionFailedError: null
+	at junit.framework.Assert.fail(Assert.java:55)
+	at junit.framework.Assert.assertTrue(Assert.java:22)
+	at junit.framework.Assert.assertTrue(Assert.java:31)
+	at junit.framework.TestCase.assertTrue(TestCase.java:201)
+	at org.jfree.chart.plot.junit.MultiplePiePlotTests.testConstructor(MultiplePiePlotTests.java:112)
+
