@@ -293,7 +293,7 @@ After running the tool, you can find the file `input-file.csv` stored
 in the base directory of the target project.
 
 ### YouTube Demo Video
-You can watch our demo [YouTube video](link) showing how you can
+You can watch our demo [YouTube video](https://bit.ly/2K8gnYV) showing how you can
 setup ObjSim and apply it on one of the example projects.
 
 ## ObjSim Reports
