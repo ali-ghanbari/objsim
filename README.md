@@ -453,6 +453,12 @@ including but not limited to ASTOR implementations, CapGen, NOPOL, and Sequencer
 We believe such an efficient and effective method for patch prioritization will contribute
 significantly for bringing APR systems to everyday programming.
 
+## Credits
+ObjSim and the related library [object-utils](https://github.com/ali-ghanbari/object-utils)
+are written by [Ali Ghanbari](https://ali-ghanbari.github.io/).
+ObjSim is a prototype that is being used in an ongoing research on automated program repair
+and is part of Ali's Ph.D. dissertation. 
+
 ***
 
 :three: Tan, et al., "Anti-patterns in search-based program repair," in FSE'16.
@@ -460,9 +466,3 @@ significantly for bringing APR systems to everyday programming.
 :four: Wen, et al., "Context-Aware Patch Generation for Better Automated Program Repair," in ICSE'18.
 
 :five: Le, et al., "History Driven Program Repair," in SANER'16.
-
-## Credits
-ObjSim and the related library [object-utils](https://github.com/ali-ghanbari/object-utils)
-are written by [Ali Ghanbari](https://ali-ghanbari.github.io/).
-ObjSim is a prototype that is being used in an ongoing research on automated program repair
-and is part of Ali's Ph.D. dissertation. 
