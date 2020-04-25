@@ -412,7 +412,7 @@ the plausible, but overfitted, ones.
 | Time-11|32|1|1|1 |
 | **Time-19**|**2**|**1**|**2**|**1** |
 
-&dagger;, &Dagger;: Bugs [Closure-62](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/62.src.patch) and [Closure-63](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/63.src.patch), as well as [Closure-92](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/92.src.patch) and [Closure-93](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/93.src.patch), are duplicated in Defects4J database. We counted them once in our analyses.
+&dagger;, &Dagger;: Bugs [Closure-62](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/62.src.patch) and [Closure-63](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/63.src.patch), as well as [Closure-92](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/92.src.patch) and [Closure-93](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/93.src.patch), are duplicated in Defects4J database. We counted each pair once in our analyses.
 
 In this table the column "Bug Id" represents the bug identifier consistent with that of
 Defects4J database. The columns "# Plausible Patches", and "# Genuine Patches" list the number
@@ -437,7 +437,7 @@ Please note that for 3 of the bugs, ObjSim degrades the rank of genuine fix, and
 because the genuine fix in those bugs happened to be involved in radical changes in control
 flow of the program, e.g., deleting a block of code (which redirects control flow to a method
 with entirely different body) and calling different methods with entirely different bodies,
-and altering. As per the previous empirical studies<sup>[1],[2]</sup>, most of such changes are
+and altering. As per the previous empirical studies<sup>[1],[2],[3]</sup>, most of such changes are
 unlikely to be genuine fixes for the bugs.
 
 In summary, ObjSim increases the number of genuine fixes ranked in top-1 position from 30
@@ -454,3 +454,5 @@ significantly for bringing APR systems to everyday programming.
 [1] Tan, et al., "Anti-patterns in search-based program repair," in FSE'16.
 
 [2]: Wen, et al., "Context-Aware Patch Generation for Better Automated Program Repair," in ICSE'18.
+
+[3]: Le, et al., "History Driven Program Repair," in SANER'16.
