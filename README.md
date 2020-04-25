@@ -359,7 +359,7 @@ the plausible, but overfitted, ones.
 | Chart-1|2|1|1|1 |
 | Chart-8|2|2|2|2 |
 | Chart-11|2|1|1|1 |
-| Chart-12|2|1|2|1 |
+| **Chart-12**|**2**|**1**|**2**|**1** |
 | Chart-20|1|1|1|1 |
 | Chart-24|2|1|1|1 |
 | Chart-26|100|1|17|Time-out |
@@ -369,31 +369,31 @@ the plausible, but overfitted, ones.
 | Closure-18|1|1|1|1 |
 | Closure-31|9|1|6|Time-out |
 | Closure-46|7|2|1|4 |
-| Closure-62[^1]|1|1|1|1 |
-| Closure-63[^1]|1|1|1|1 |
+| Closure-62<sup>&dagger;</sup>|1|1|1|1 |
+| Closure-63<sup>&dagger;</sup>|1|1|1|1 |
 | Closure-70|1|1|1|1 |
 | Closure-73|1|1|1|1 |
 | Closure-86|3|2|1|1 |
-| Closure-92[^2]|4|1|1|4 |
-| Closure-93[^2]|4|1|1|4 |
+| Closure-92<sup>&Dagger;</sup>|4|1|1|4 |
+| Closure-93<sup>&Dagger;</sup>|4|1|1|4 |
 | Closure-126|12|2|5|Time-out |
 | CommonsCli-4|6|1|6|6 |
 | CommonsCli-22|1|1|1|1 |
 | CommonsCli-23|2|2|1|1 |
 | CommonsCodec-13|1|1|1|1 |
 | CommonsCsv-5|1|1|1|1 |
-| CommonsJXPath-1|4|1|4|1 |
+| **CommonsJXPath-1**|**4**|**1**|**4**|**1** |
 | JacksonDatabind-8|1|1|1|1 |
-| JacksonDatabind-34|2|1|2|1 |
+| **JacksonDatabind-34**|**2**|**1**|**2**|**1** |
 | JacksonDatabind-36|1|1|1|1 |
-| JacksonDatabind-39|7|1|5|1 |
+| **JacksonDatabind-39**|**7**|**1**|**5**|**1** |
 | Jsoup-3|1|1|1|1 |
 | Jsoup-42|13|1|1|Time-out |
 | Lang-6|1|1|1|1 |
 | Lang-10|7|2|2|Time-out |
 | Lang-26|1|1|1|1 |
 | Lang-33|1|1|1|1 |
-| Lang-57|3|1|3|1 |
+| **Lang-57**|**3**|**1**|**3**|**1** |
 | Lang-59|2|1|2|2 |
 | Math-5|3|1|1|1 |
 | Math-33|1|1|1|1 |
@@ -403,14 +403,15 @@ the plausible, but overfitted, ones.
 | Math-59|1|1|1|1 |
 | Math-70|1|1|1|1 |
 | Math-75|1|1|1|1 |
-| Math-82|9|1|9|1 |
+| **Math-82**|**9**|**1**|**9**|**1** |
 | Math-85|4|1|4|4 |
 | Mockito-5|31|1|31|31 |
-| Mockito-29|2|1|2|1 |
+| **Mockito-29**|**2**|**1**|**2**|**1** |
 | Mockito-38|3|1|2|2 |
-| Time-4|5|1|5|3 |
+| **Time-4**|**5**|**1**|**5**|**3** |
 | Time-11|32|1|1|1 |
-| Time-19|2|1|2|1 |
+| **Time-19**|**2**|**1**|**2**|**1** |
+<sup>&dagger;</sup>, <sup>&Dagger;</sup>: Bugs [Closure-62](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/62.src.patch) and [Closure-63](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/63.src.patch), as well as [Closure-92](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/92.src.patch) and [Closure-93](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/93.src.patch), are duplicated in Defects4J database. We counted them once in our analyses.
 
 In this table the column "Bug Id" represents the bug identifier consistent with that of
 Defects4J database. The columns "# Plausible Patches", and "# Genuine Patches" list the number
@@ -435,7 +436,7 @@ Please note that for 3 of the bugs, ObjSim degrades the rank of genuine fix, and
 because the genuine fix in those bugs happened to be involved in radical changes in control
 flow of the program, e.g., deleting a block of code (which redirects control flow to a method
 with entirely different body) and calling different methods with entirely different bodies,
-and altering. As per the previous empirical studies [^3][^4], most of such changes are
+and altering. As per the previous empirical studies<sup>[1],[2]</sup>, most of such changes are
 unlikely to be genuine fixes for the bugs.
 
 In summary, ObjSim increases the number of genuine fixes ranked in top-1 position from 30
@@ -447,10 +448,8 @@ including but not limited to ASTOR implementations, CapGen, NOPOL, and Sequencer
 We believe such an efficient and effective method for patch prioritization will contribute
 significantly for bringing APR systems to everyday programming.
 
-[^1]: [Closure-62](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/62.src.patch) and [Closure-63](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/63.src.patch) are duplicated in Defects4J database. We counted them once in our analyses.
+### References
 
-[^2]: [Closure-92](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/92.src.patch) and [Closure-93](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/93.src.patch) are duplicated in Defects4J database. We counted them once in our analyses.
+[1] Tan, et al., "Anti-patterns in search-based program repair," in FSE'16.
 
-[^3]: Tan, et al., "Anti-patterns in search-based program repair," in FSE'16.
-
-[^4]: Wen, et al., "Context-Aware Patch Generation for Better Automated Program Repair," in ICSE'18.
+[2]: Wen, et al., "Context-Aware Patch Generation for Better Automated Program Repair," in ICSE'18.
