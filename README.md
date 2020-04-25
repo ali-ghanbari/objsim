@@ -13,6 +13,7 @@
     * [Other Artifacts](#other-artifacts)
 - [System Requirements](#system-requirements)
 - [Empirical Analysis](#empirical-analysis)
+- [Credits](#credits)
 
 ## Introduction
 ObjSim is an automatic patch prioritization system based on the concept of
@@ -191,13 +192,12 @@ in the `pom.xml` of the target project.
             <failingTest>fully.qualified.test.ClassN::testMethodN</failingTest>
         </failingTests>
         <!-- <inputCSVFile>input-file.csv</inputCSVFile>                  -->
-        <!-- <whiteListPrefix>com.example.your.project</whiteListPrefix>  -->
+        <!-- <whiteListPrefix>${project.groupId}</whiteListPrefix>        -->
         <!-- <childJVMArgs>                                               -->
-        <!--     <childJVMArg>-Xmx32g</childJVMArg>                       -->
-        <!--     <childJVMArg>-XX:MaxPermSize=16g</childJVMArg>           -->
+        <!--     <childJVMArg>-Xmx16g</childJVMArg>                       -->
         <!--     ...                                                      -->
         <!--     <childJVMArg>Mth argument to the child JVM</childJVMArg> -->
-        <!-- </childJVMArgs> -->
+        <!-- </childJVMArgs>                                              -->
     </configuration>
 </plugin>
 ```
@@ -234,10 +234,6 @@ generation space, if applicable) for the child _profiler_ processes. Profiler
 processes, as described in the paper, are responsible for executing test cases
 against the original and patched program and collect information about the
 system state right at the exit point(s) of the specified patched method.
-It is worth noting that the values of 32 GB for heap space and 16 GB for
-PermGen space is consistent with what we state in
-[system requirements](#system-requirements) section as not every project
-will need all that space.
 
 In the rest of this section, we discuss the format of input CSV file expected
 by ObjSim Maven plugin and the way you can automatically generate the file
@@ -346,7 +342,7 @@ the patches generated for Defects4J bugs.
  
 * JDK: Oracle Java SE Development Kit 7u80 (recommended for Defects4J) and
 JDK 8u171 or higher needed running `input-file-generator` script.  
-* Build System: Maven 3.2+
+* Build System: Maven 3+
 * Version Control System: Git 2.17.1+
 * OS: Ubuntu Linux or Mac OS X
 * RAM: 16+ GB

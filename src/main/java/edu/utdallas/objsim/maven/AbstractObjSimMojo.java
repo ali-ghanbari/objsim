@@ -92,7 +92,7 @@ public abstract class AbstractObjSimMojo extends AbstractMojo {
      * profiling.
      *
      * If left unspecified, ObjSim will use the following arguments:
-     * "-Xmx32g"
+     * "-Xmx16g"
      */
     @Parameter(property = "childJVMArgs")
     protected List<String> childJVMArgs;
@@ -147,7 +147,7 @@ public abstract class AbstractObjSimMojo extends AbstractMojo {
         this.failingTests.addAll(temp);
 
         if (this.childJVMArgs == null || this.childJVMArgs.isEmpty()) {
-            this.childJVMArgs = Collections.singletonList("-Xmx32g");
+            this.childJVMArgs = Collections.singletonList("-Xmx16g");
         }
 
         if (this.whiteListPrefix.isEmpty()) {
