@@ -437,7 +437,7 @@ Please note that for 3 of the bugs, ObjSim degrades the rank of genuine fix, and
 because the genuine fix in those bugs happened to be involved in radical changes in control
 flow of the program, e.g., deleting a block of code (which redirects control flow to a method
 with entirely different body) and calling different methods with entirely different bodies,
-and altering. As per the previous empirical studies<sup>:one:,:two:,:three:</sup>, most of such changes are
+and altering. As per the previous empirical studies <sup>:one:,:two:,:three:</sup>, most of such changes are
 unlikely to be genuine fixes for the bugs.
 
 In summary, ObjSim increases the number of genuine fixes ranked in top-1 position from 30
