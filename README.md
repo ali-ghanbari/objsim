@@ -421,7 +421,7 @@ reports the _best rank_ of genuine fix, among other plausible patches, for each 
 prioritized by the default ranking scheme of PraPR. By best rank, we mean the rank of the
 first genuine fix that we find in the list of plausible patches. Lastly, the column "Rank After" 
 reports the best rank of genuine fix for each bug as prioritized by ObjSim. Please note that
-the two duplicated bug pairs have been counted once in our analyses.
+duplicated bug pairs have been treated as identical in our analyses.
 
 We conducted our experiments on a commodity Dell Optiplex 7020 PC with Intel Core i5 3.30GHz
 CPU, 16 GB of RAM, and running Ubuntu 16.04.6 LTS. The current version of ObjSim uses only
