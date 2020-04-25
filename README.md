@@ -369,13 +369,13 @@ the plausible, but overfitted, ones.
 | Closure-18|1|1|1|1 |
 | Closure-31|9|1|6|Time-out |
 | Closure-46|7|2|1|4 |
-| Closure-62<sup>:one:</sup>|1|1|1|1 |
-| Closure-63<sup>:one:</sup>|1|1|1|1 |
+| Closure-62 <sup>:one:</sup>|1|1|1|1 |
+| Closure-63 <sup>:one:</sup>|1|1|1|1 |
 | Closure-70|1|1|1|1 |
 | Closure-73|1|1|1|1 |
 | Closure-86|3|2|1|1 |
-| Closure-92<sup>:two:</sup>|4|1|1|4 |
-| Closure-93<sup>:two:</sup>|4|1|1|4 |
+| Closure-92 <sup>:two:</sup>|4|1|1|4 |
+| Closure-93 <sup>:two:</sup>|4|1|1|4 |
 | Closure-126|12|2|5|Time-out |
 | CommonsCli-4|6|1|6|6 |
 | CommonsCli-22|1|1|1|1 |
