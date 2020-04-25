@@ -431,7 +431,7 @@ heap size of the JVM instances to 16 GB. During 5 minutes period for each bug, t
 for none of the bugs raised above 9 GB and only 6 of the bugs failed to get fully processed
 by ObjSim within the time budget.
 
-Despite such a tough limit, ObjSim has been able to 5 more genuine fixes in top-1 position.
+Despite such a tough limit, ObjSim has been able to prioritize 5 more genuine fixes in top-1 position.
 This is a 16% improvement in the number of genuine fixes ranked in top-1 position.
 Please note that for 3 of the bugs, ObjSim degrades the rank of genuine fix, and that is
 because the genuine fix in those bugs happened to be involved in radical changes in control
