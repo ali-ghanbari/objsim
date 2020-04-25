@@ -411,7 +411,8 @@ the plausible, but overfitted, ones.
 | **Time-4**|**5**|**1**|**5**|**3** |
 | Time-11|32|1|1|1 |
 | **Time-19**|**2**|**1**|**2**|**1** |
-<sup>&dagger;</sup>, <sup>&Dagger;</sup>: Bugs [Closure-62](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/62.src.patch) and [Closure-63](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/63.src.patch), as well as [Closure-92](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/92.src.patch) and [Closure-93](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/93.src.patch), are duplicated in Defects4J database. We counted them once in our analyses.
+
+&dagger;, &Dagger;: Bugs [Closure-62](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/62.src.patch) and [Closure-63](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/63.src.patch), as well as [Closure-92](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/92.src.patch) and [Closure-93](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/93.src.patch), are duplicated in Defects4J database. We counted them once in our analyses.
 
 In this table the column "Bug Id" represents the bug identifier consistent with that of
 Defects4J database. The columns "# Plausible Patches", and "# Genuine Patches" list the number
