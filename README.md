@@ -369,13 +369,13 @@ the plausible, but overfitted, ones.
 | Closure-18|1|1|1|1 |
 | Closure-31|9|1|6|Time-out |
 | Closure-46|7|2|1|4 |
-| Closure-62<sup>&dagger;</sup>|1|1|1|1 |
-| Closure-63<sup>&dagger;</sup>|1|1|1|1 |
+| Closure-62<sup>:one:</sup>|1|1|1|1 |
+| Closure-63<sup>:one:</sup>|1|1|1|1 |
 | Closure-70|1|1|1|1 |
 | Closure-73|1|1|1|1 |
 | Closure-86|3|2|1|1 |
-| Closure-92<sup>&Dagger;</sup>|4|1|1|4 |
-| Closure-93<sup>&Dagger;</sup>|4|1|1|4 |
+| Closure-92<sup>:two:</sup>|4|1|1|4 |
+| Closure-93<sup>:two:</sup>|4|1|1|4 |
 | Closure-126|12|2|5|Time-out |
 | CommonsCli-4|6|1|6|6 |
 | CommonsCli-22|1|1|1|1 |
@@ -412,7 +412,7 @@ the plausible, but overfitted, ones.
 | Time-11|32|1|1|1 |
 | **Time-19**|**2**|**1**|**2**|**1** |
 
-&dagger;, &Dagger;: Bugs [Closure-62](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/62.src.patch) and [Closure-63](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/63.src.patch), as well as [Closure-92](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/92.src.patch) and [Closure-93](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/93.src.patch), are duplicated in Defects4J database. We counted each pair once in our analyses.
+:one:, :two:: Bugs [Closure-62](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/62.src.patch) and [Closure-63](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/63.src.patch), as well as [Closure-92](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/92.src.patch) and [Closure-93](https://github.com/Greg4cr/defects4j/blob/additional-faults-1.4/framework/projects/Closure/patches/93.src.patch), are duplicated in Defects4J database. We counted each pair once in our analyses.
 
 In this table the column "Bug Id" represents the bug identifier consistent with that of
 Defects4J database. The columns "# Plausible Patches", and "# Genuine Fixes" list the number
@@ -438,7 +438,7 @@ that is because the genuine fix in those bugs happened to be involved in radical
 control flow of the program, and hence in the objects that it computes, e.g., deleting a block
 of code (which redirects control flow to a method with entirely different body) and calling
 different methods with entirely different behavior, etc. As per the previous empirical studies
-<sup>:one:,:two:,:three:</sup>, most of such changes are unlikely to be genuine fixes for the
+<sup>:three:,:four:,:five:</sup>, most of such changes are unlikely to be genuine fixes for the
 bugs.
 
 In summary, ObjSim increases the number of genuine fixes ranked in top-1 position from 30
@@ -450,10 +450,10 @@ including but not limited to ASTOR implementations, CapGen, NOPOL, and Sequencer
 We believe such an efficient and effective method for patch prioritization will contribute
 significantly for bringing APR systems to everyday programming.
 
-### References
+***
 
-:one: Tan, et al., "Anti-patterns in search-based program repair," in FSE'16.
+:three: Tan, et al., "Anti-patterns in search-based program repair," in FSE'16.
 
-:two: Wen, et al., "Context-Aware Patch Generation for Better Automated Program Repair," in ICSE'18.
+:four: Wen, et al., "Context-Aware Patch Generation for Better Automated Program Repair," in ICSE'18.
 
-:three: Le, et al., "History Driven Program Repair," in SANER'16.
+:five: Le, et al., "History Driven Program Repair," in SANER'16.
