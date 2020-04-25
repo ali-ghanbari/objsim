@@ -1,17 +1,37 @@
-/*
- * Copyright (C) UT Dallas - All Rights Reserved.
- * Unauthorized copying of this file via any medium is
- * strictly prohibited.
- * This code base is proprietary and confidential.
- * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
- */
 package edu.utdallas.objsim.profiler;
 
+/*
+ * #%L
+ * objsim
+ * %%
+ * Copyright (C) 2020 The University of Texas at Dallas
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import edu.utdallas.objectutils.Wrapped;
-import edu.utdallas.objsim.commons.misc.MemberNameUtils;
+import edu.utdallas.objsim.commons.misc.NameUtils;
+import edu.utdallas.objsim.commons.process.AbstractChildProcessArguments;
+import edu.utdallas.objsim.commons.relational.FieldsDom;
 import edu.utdallas.objsim.junit.runner.JUnitRunner;
+import edu.utdallas.objsim.profiler.prelude.FieldAccessRecorder;
+import edu.utdallas.objsim.profiler.prelude.PreludeTransformer;
+import edu.utdallas.objsim.profiler.primary.PrimaryTransformer;
+import edu.utdallas.objsim.profiler.primary.SnapshotTracker;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.runner.manipulation.Filter;
 import org.pitest.boot.HotSwapAgent;
@@ -31,6 +51,7 @@ import org.pitest.util.SafeDataInputStream;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.instrument.ClassFileTransformer;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.Socket;
@@ -41,7 +62,7 @@ import java.util.Map;
 
 import static org.junit.runner.Description.createTestDescription;
 
-import static edu.utdallas.objsim.commons.misc.MemberNameUtils.decomposeMethodName;
+import static edu.utdallas.objsim.commons.misc.NameUtils.decomposeMethodName;
 
 /**
  * Entry point for Profiler.
@@ -52,7 +73,7 @@ import static edu.utdallas.objsim.commons.misc.MemberNameUtils.decomposeMethodNa
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 public final class Profiler {
-    private static final int CACHE_SIZE = 50;
+    private static final int CACHE_SIZE = 500;
 
     private Profiler() {
 
@@ -64,19 +85,38 @@ public final class Profiler {
         try (Socket socket = new Socket("localhost", port)) {
             final SafeDataInputStream dis = new SafeDataInputStream(socket.getInputStream());
 
-            final ProfilerArguments arguments = dis.read(ProfilerArguments.class);
+            final AbstractChildProcessArguments arguments = dis.read(AbstractChildProcessArguments.class);
+
+            final boolean isPreludeStage = arguments instanceof PreludeProfilerArguments;
 
             final ClassLoader contextClassLoader = IsolationUtils.getContextClassLoader();
             ClassByteArraySource byteArraySource = new ClassloaderByteArraySource(contextClassLoader);
             byteArraySource = new CachingByteArraySource(byteArraySource, CACHE_SIZE);
 
-            HotSwapAgent.addTransformer(new ProfilerTransformer(arguments.getPatchedMethodName(), byteArraySource));
+            final FieldsDom fieldsDom;
+            final ClassFileTransformer transformer;
+            if (isPreludeStage) {
+                final String whiteListPrefix = ((PreludeProfilerArguments) arguments).getWhiteListPrefix();
+                fieldsDom = new FieldsDom();
+                transformer = new PreludeTransformer(byteArraySource, whiteListPrefix, arguments.getPatchedMethodName(), fieldsDom);
+            } else {
+                fieldsDom = ((PrimaryProfilerArguments) arguments).getFieldsDom();
+                final Collection<Integer> accessedFields = ((PrimaryProfilerArguments) arguments).getAccessedFields();
+                SnapshotTracker.setAccessedFields(fieldsDom, accessedFields);
+                transformer = new PrimaryTransformer(arguments.getPatchedMethodName(), byteArraySource);
+            }
+            HotSwapAgent.addTransformer(transformer);
 
             final ProfilerReporter reporter = new ProfilerReporter(socket.getOutputStream());
 
             final JUnitRunner runner = new JUnitRunner(testNameToTestUnit(arguments.getCoveringTestNames()));
             runner.setTestUnits(decorateTestCases(runner.getTestUnits(), reporter));
             runner.run();
+
+            if (isPreludeStage) {
+                reporter.reportFieldsDom(fieldsDom);
+                reporter.reportFieldAccesses(FieldAccessRecorder.getFieldAccesses());
+            }
 
             System.out.println("Profiler is DONE!");
             reporter.done(ExitCode.OK);
@@ -94,7 +134,7 @@ public final class Profiler {
                 public void execute(ResultCollector resultCollector) {
                     testUnit.execute(resultCollector);
                     final String testName =
-                            MemberNameUtils.sanitizeExtendedTestName(testUnit.getDescription().getName());
+                            NameUtils.sanitizeExtendedTestName(testUnit.getDescription().getName());
                     reporter.reportSnapshots(testName, SnapshotTracker.SNAPSHOTS.toArray(new Wrapped[0]));
                     SnapshotTracker.SNAPSHOTS.clear();
                 }
@@ -114,7 +154,7 @@ public final class Profiler {
         final List<TestUnit> res = new LinkedList<>();
         for (final String testCaseName : testCaseNames) {
             final Pair<String, String> methodNameParts =
-                    decomposeMethodName(MemberNameUtils.sanitizeExtendedTestName(testCaseName));
+                    decomposeMethodName(NameUtils.sanitizeExtendedTestName(testCaseName));
             final Class<?> testSuite = Class.forName(methodNameParts.getLeft());
             Method testCase = null;
             for (final Method method : testSuite.getMethods()) {
@@ -138,37 +178,67 @@ public final class Profiler {
         return res;
     }
 
+    private static Pair<FieldsDom, ? extends List<Integer>> runPrelude(final ProcessArgs defaultProcessArgs,
+                                                                       final String whiteListPrefix,
+                                                                       final String patchedMethodFullName,
+                                                                       final Collection<String> coveringTestNames)
+            throws IOException, InterruptedException {
+        final PreludeProfilerArguments arguments = new PreludeProfilerArguments(whiteListPrefix, patchedMethodFullName, coveringTestNames);
+        final ProfilerProcess process = new ProfilerProcess(defaultProcessArgs, arguments);
+        process.start();
+        process.waitToDie();
+        return new ImmutablePair<>(process.getFieldsDom(), process.getFieldAccesses());
+    }
+
     public static Map<String, Wrapped[]> getSnapshots(final ProcessArgs defaultProcessArgs,
                                                       final File targetDirectory,
                                                       final File patchedClassFile,
+                                                      final String whiteListPrefix,
                                                       final String patchedMethodFullName,
                                                       final Collection<String> coveringTestNames)
             throws IOException, InterruptedException {
         Validate.isTrue(patchedClassFile.isFile());
         Validate.isTrue(targetDirectory.isDirectory());
         final Backup backup = backup(new File(targetDirectory, "classes"), patchedClassFile);
-        final ProfilerArguments arguments = new ProfilerArguments(patchedMethodFullName, coveringTestNames);
-        final ProfilerProcess process = new ProfilerProcess(defaultProcessArgs, arguments);
-        process.start();
-        process.waitToDie();
+        final ProfilerProcess process = runProcess(defaultProcessArgs,
+                whiteListPrefix,
+                patchedMethodFullName,
+                coveringTestNames);
         backup.restore();
         return process.getSnapshots();
     }
 
     public static Map<String, Wrapped[]> getSnapshots(final ProcessArgs defaultProcessArgs,
+                                                      final String whiteListPrefix,
                                                       final String patchedMethodFullName,
                                                       final Collection<String> coveringTestNames)
             throws IOException, InterruptedException {
-        final ProfilerArguments arguments = new ProfilerArguments(patchedMethodFullName, coveringTestNames);
+        return runProcess(defaultProcessArgs,
+                whiteListPrefix,
+                patchedMethodFullName,
+                coveringTestNames).getSnapshots();
+    }
+
+    private static ProfilerProcess runProcess(final ProcessArgs defaultProcessArgs,
+                                              final String whiteListPrefix,
+                                              final String patchedMethodFullName,
+                                              final Collection<String> coveringTestNames)
+            throws IOException, InterruptedException {
+        final Pair<FieldsDom, ? extends List<Integer>> preludeResult = runPrelude(defaultProcessArgs,
+                whiteListPrefix, patchedMethodFullName, coveringTestNames);
+        final FieldsDom fieldsDom = preludeResult.getLeft();
+        final List<Integer> accessedFields = preludeResult.getRight();
+        final AbstractChildProcessArguments arguments = new PrimaryProfilerArguments(patchedMethodFullName,
+                coveringTestNames, fieldsDom, accessedFields);
         final ProfilerProcess process = new ProfilerProcess(defaultProcessArgs, arguments);
         process.start();
         process.waitToDie();
-        return process.getSnapshots();
+        return process;
     }
 
     private static Backup backup(final File baseDirectory,
                                  final File patchedClassFile) throws IOException {
-        final String classFullName = MemberNameUtils.getClassName(patchedClassFile);
+        final String classFullName = NameUtils.getClassName(patchedClassFile);
         final int indexOfLastDot = classFullName.lastIndexOf('.');
         final String packageName = classFullName.substring(0, indexOfLastDot);
         final String className = classFullName.substring(1 + indexOfLastDot);

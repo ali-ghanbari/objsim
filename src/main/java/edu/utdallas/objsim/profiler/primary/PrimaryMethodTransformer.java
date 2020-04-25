@@ -1,42 +1,46 @@
-/*
- * Copyright (C) UT Dallas - All Rights Reserved.
- * Unauthorized copying of this file via any medium is
- * strictly prohibited.
- * This code base is proprietary and confidential.
- * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
- */
-package edu.utdallas.objsim.profiler;
+package edu.utdallas.objsim.profiler.primary;
 
-import org.objectweb.asm.Label;
+/*
+ * #%L
+ * objsim
+ * %%
+ * Copyright (C) 2020 The University of Texas at Dallas
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
+import edu.utdallas.objsim.commons.asm.FinallyBlockAdviceAdapter;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 
+import static edu.utdallas.objsim.commons.asm.MethodBodyUtils.pushInteger;
 import static org.objectweb.asm.Opcodes.AALOAD;
 import static org.objectweb.asm.Opcodes.AASTORE;
 import static org.objectweb.asm.Opcodes.ALOAD;
 import static org.objectweb.asm.Opcodes.ANEWARRAY;
-import static org.objectweb.asm.Opcodes.ARETURN;
 import static org.objectweb.asm.Opcodes.ASM7;
-import static org.objectweb.asm.Opcodes.ATHROW;
-import static org.objectweb.asm.Opcodes.BIPUSH;
 import static org.objectweb.asm.Opcodes.DLOAD;
-import static org.objectweb.asm.Opcodes.DRETURN;
 import static org.objectweb.asm.Opcodes.DUP;
 import static org.objectweb.asm.Opcodes.DUP_X1;
 import static org.objectweb.asm.Opcodes.DUP_X2;
 import static org.objectweb.asm.Opcodes.FLOAD;
-import static org.objectweb.asm.Opcodes.FRETURN;
 import static org.objectweb.asm.Opcodes.ICONST_0;
 import static org.objectweb.asm.Opcodes.ILOAD;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
-import static org.objectweb.asm.Opcodes.IRETURN;
 import static org.objectweb.asm.Opcodes.LLOAD;
-import static org.objectweb.asm.Opcodes.LRETURN;
 import static org.objectweb.asm.Opcodes.POP;
-import static org.objectweb.asm.Opcodes.RETURN;
-import static org.objectweb.asm.Opcodes.SIPUSH;
 import static org.objectweb.asm.Opcodes.SWAP;
 import static org.objectweb.asm.Opcodes.CHECKCAST;
 
@@ -47,11 +51,13 @@ import static org.objectweb.asm.Opcodes.CHECKCAST;
  *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
-public class TransformerMethodVisitor extends MethodVisitor {
+class PrimaryMethodTransformer extends FinallyBlockAdviceAdapter {
+    private static final Type OBJECT_TYPE = Type.getObjectType("java/lang/Object");
+
     private static final String SNAPSHOT_TRACKER;
 
     static {
-        SNAPSHOT_TRACKER = SnapshotTracker.class.getName().replace('.', '/');
+        SNAPSHOT_TRACKER = Type.getInternalName(SnapshotTracker.class);
     }
 
     private final boolean isStatic;
@@ -60,58 +66,30 @@ public class TransformerMethodVisitor extends MethodVisitor {
 
     private final Type retType;
 
-    private final Label startFinally;
-
-    private int skip;
-
-    public TransformerMethodVisitor(final MethodVisitor methodVisitor,
+    public PrimaryMethodTransformer(final MethodVisitor methodVisitor,
                                     final boolean isStatic,
                                     final  Type[] paramTypes,
                                     final Type retType,
-                                    final int skip) {
-        super(ASM7, methodVisitor);
+                                    final int invokeSpecialSkips) {
+        super(ASM7, methodVisitor, invokeSpecialSkips);
         this.isStatic = isStatic;
         this.paramTypes = paramTypes;
         this.retType = retType;
-        this.startFinally = new Label();
-        this.skip = skip;
     }
 
     @Override
-    public void visitCode() {
-        super.visitCode();
-        if (this.skip < 0) {
-            insertPrelude();
-            this.skip = -2;
-        }
-    }
-
-    private void insertPrelude() {
-        onMethodEnter();
-        super.visitLabel(this.startFinally);
-    }
-
-    @Override
-    public void visitMethodInsn(int opcode, String owner, String name, String descriptor, boolean isInterface) {
-        super.visitMethodInsn(opcode, owner, name, descriptor, isInterface);
-        if (opcode == INVOKESPECIAL) {
-            if (this.skip >= 0) {
-                this.skip--;
-            }
-            if (this.skip == -1) {
-                insertPrelude();
-            }
-        }
-    }
-
-    private void onMethodEnter() {
+    protected void onMethodEnter() {
         // nothing
     }
 
-    private void onMethodExit(boolean normal) {
-        final int arraySize = calculateArraySize();
-        pushInteger(arraySize);
-        super.visitTypeInsn(ANEWARRAY, "java/lang/Object");
+    private void createArray(final Type type, final int size) {
+        pushInteger(this.mv, size);
+        super.visitTypeInsn(ANEWARRAY, type.getInternalName());
+    }
+
+    @Override
+    protected void onMethodExit(boolean normal) {
+        createArray(OBJECT_TYPE, calculateArraySize());
         int arrayIndex = 0;
         if (normal) {
             if (isNonVoidMethod()) {
@@ -121,22 +99,23 @@ public class TransformerMethodVisitor extends MethodVisitor {
         } else { // saving throwable object
             super.visitInsn(DUP_X1);
             super.visitInsn(SWAP);
-            pushInteger(arrayIndex++);
+            pushInteger(this.mv, arrayIndex++);
             super.visitInsn(SWAP);
             super.visitInsn(AASTORE);
         }
         int paramIndex = 0;
         if (!this.isStatic) {
             super.visitInsn(DUP);
-            pushInteger(arrayIndex++);
+            pushInteger(this.mv, arrayIndex++);
             super.visitVarInsn(ALOAD, paramIndex++);
             super.visitInsn(AASTORE);
         }
         for (final Type type : this.paramTypes) {
             super.visitInsn(DUP);
-            pushInteger(arrayIndex++);
-            pushWrappedParamValue(type, paramIndex++);
+            pushInteger(this.mv, arrayIndex++);
+            pushWrappedParamValue(type, paramIndex);
             super.visitInsn(AASTORE);
+            paramIndex += type.getSize();
         }
         super.visitInsn(DUP);
         super.visitMethodInsn(INVOKESTATIC, SNAPSHOT_TRACKER,
@@ -146,7 +125,7 @@ public class TransformerMethodVisitor extends MethodVisitor {
         if (normal && isNonVoidMethod()) {
             super.visitInsn(ICONST_0);
             super.visitInsn(AALOAD);
-            unWrapTopOfStack(this.retType);
+            unbox(this.retType);
             switch (this.retType.getSort()) {
                 case Type.ARRAY:
                 case Type.OBJECT:
@@ -170,19 +149,19 @@ public class TransformerMethodVisitor extends MethodVisitor {
             case Type.INT:
             case Type.SHORT:
                 super.visitVarInsn(ILOAD, paramIndex);
-                wrapTopOfStack(paramType);
+                box(paramType);
                 break;
             case Type.DOUBLE:
                 super.visitVarInsn(DLOAD, paramIndex);
-                wrapTopOfStack(paramType);
+                box(paramType);
                 break;
             case Type.FLOAT:
                 super.visitVarInsn(FLOAD, paramIndex);
-                wrapTopOfStack(paramType);
+                box(paramType);
                 break;
             case Type.LONG:
                 super.visitVarInsn(LLOAD, paramIndex);
-                wrapTopOfStack(paramType);
+                box(paramType);
                 break;
             default:
                 super.visitVarInsn(ALOAD, paramIndex);
@@ -198,13 +177,13 @@ public class TransformerMethodVisitor extends MethodVisitor {
             super.visitInsn(DUP_X2);
             super.visitInsn(POP);
         }
-        wrapTopOfStack(this.retType);
-        pushInteger(index);
+        box(this.retType);
+        pushInteger(this.mv, index);
         super.visitInsn(SWAP);
         super.visitInsn(AASTORE);
     }
 
-    private void wrapTopOfStack(final Type type) {
+    private void box(final Type type) {
         // if type represents a primitive type a primitive-typed value is expected
         // on top of the stack.
         switch (type.getSort()) {
@@ -252,7 +231,7 @@ public class TransformerMethodVisitor extends MethodVisitor {
         // is no need to take further action.
     }
 
-    private void unWrapTopOfStack(final Type type) {
+    private void unbox(final Type type) {
         // in case the type represents a primitive type, a wrapped object is expected
         // on top of the stack.
         switch (type.getSort()) {
@@ -320,46 +299,8 @@ public class TransformerMethodVisitor extends MethodVisitor {
         return sz;
     }
 
-    private void pushInteger(final int intValue) {
-        if (intValue <= 5) {
-            super.visitInsn(ICONST_0 + intValue);
-        } else if (intValue <= Byte.MAX_VALUE) {
-            super.visitIntInsn(BIPUSH, intValue);
-        } else if (intValue <= Short.MAX_VALUE) {
-            super.visitIntInsn(SIPUSH, intValue);
-        } else {
-            super.visitLdcInsn(intValue);
-        }
-    }
-
-    private boolean isReturnInst(int opcode) {
-        switch (opcode) {
-            case RETURN:
-            case IRETURN:
-            case ARETURN:
-            case LRETURN:
-            case FRETURN:
-            case DRETURN:
-                return true;
-        }
-        return false;
-    }
-
-    @Override
-    public void visitInsn(int opcode) {
-        if (isReturnInst(opcode)) {
-            onMethodExit(true);
-        }
-        super.visitInsn(opcode);
-    }
-
     @Override
     public void visitMaxs(int maxStack, int maxLocals) {
-        final Label endFinally = new Label();
-        super.visitTryCatchBlock(this.startFinally, endFinally, endFinally, null);
-        super.visitLabel(endFinally);
-        onMethodExit(false);
-        super.visitInsn(ATHROW);
         int maxSz = Math.max(0, this.retType.getSize());
         for (final Type pt : this.paramTypes) {
             maxSz = Math.max(maxSz, pt.getSize());

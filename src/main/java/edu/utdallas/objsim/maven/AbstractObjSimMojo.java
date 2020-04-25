@@ -1,14 +1,27 @@
-/*
- * Copyright (C) UT Dallas - All Rights Reserved.
- * Unauthorized copying of this file via any medium is
- * strictly prohibited.
- * This code base is proprietary and confidential.
- * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
- */
 package edu.utdallas.objsim.maven;
 
+/*
+ * #%L
+ * objsim
+ * %%
+ * Copyright (C) 2020 The University of Texas at Dallas
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
+
 import edu.utdallas.objsim.ObjSimEntryPoint;
-import edu.utdallas.objsim.commons.misc.MemberNameUtils;
+import edu.utdallas.objsim.commons.misc.NameUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
@@ -25,7 +38,7 @@ import org.pitest.functional.Option;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -79,10 +92,13 @@ public abstract class AbstractObjSimMojo extends AbstractMojo {
      * profiling.
      *
      * If left unspecified, ObjSim will use the following arguments:
-     * "-Xmx32g" and "-XX:MaxPermSize=16g"
+     * "-Xmx32g"
      */
     @Parameter(property = "childJVMArgs")
     protected List<String> childJVMArgs;
+
+    @Parameter(property = "whiteListPrefix", defaultValue = "${project.groupId}")
+    protected String whiteListPrefix;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -97,6 +113,7 @@ public abstract class AbstractObjSimMojo extends AbstractMojo {
             ObjSimEntryPoint.createEntryPoint()
                     .withBaseDirectory(baseDirectory)
                     .withClassByteArraySource(byteArraySource)
+                    .withWhiteListPrefix(this.whiteListPrefix)
                     .withClassPath(classPath)
                     .withCompatibleJREHome(this.compatibleJREHome)
                     .withChildJVMArgs(this.childJVMArgs)
@@ -124,13 +141,17 @@ public abstract class AbstractObjSimMojo extends AbstractMojo {
 
         final List<String> temp = new LinkedList<>();
         for (final String failingTest : this.failingTests) {
-            temp.add(MemberNameUtils.sanitizeTestName(failingTest));
+            temp.add(NameUtils.sanitizeTestName(failingTest));
         }
         this.failingTests.clear();
         this.failingTests.addAll(temp);
 
         if (this.childJVMArgs == null || this.childJVMArgs.isEmpty()) {
-            this.childJVMArgs = Arrays.asList("-Xmx32g", "-XX:MaxPermSize=16g");
+            this.childJVMArgs = Collections.singletonList("-Xmx32g");
+        }
+
+        if (this.whiteListPrefix.isEmpty()) {
+            this.whiteListPrefix = this.project.getGroupId();
         }
     }
 

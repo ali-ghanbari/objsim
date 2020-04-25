@@ -1,11 +1,24 @@
+package edu.utdallas.objsim.profiler.primary;
+
 /*
- * Copyright (C) UT Dallas - All Rights Reserved.
- * Unauthorized copying of this file via any medium is
- * strictly prohibited.
- * This code base is proprietary and confidential.
- * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
+ * #%L
+ * objsim
+ * %%
+ * Copyright (C) 2020 The University of Texas at Dallas
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
  */
-package edu.utdallas.objsim.profiler;
 
 import edu.utdallas.objsim.commons.asm.ComputeClassWriter;
 import org.apache.commons.lang3.tuple.Pair;
@@ -19,7 +32,7 @@ import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Map;
 
-import static edu.utdallas.objsim.commons.misc.MemberNameUtils.decomposeMethodName;
+import static edu.utdallas.objsim.commons.misc.NameUtils.decomposeMethodName;
 import static org.pitest.bytecode.FrameOptions.pickFlags;
 
 /**
@@ -29,7 +42,7 @@ import static org.pitest.bytecode.FrameOptions.pickFlags;
  *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
-class ProfilerTransformer implements ClassFileTransformer {
+public class PrimaryTransformer implements ClassFileTransformer {
     private final ClassByteArraySource byteArraySource;
 
     private final Map<String, String> cache;
@@ -38,13 +51,12 @@ class ProfilerTransformer implements ClassFileTransformer {
 
     private final String patchedMethodFullName;
 
-    public ProfilerTransformer(final String patchedMethodFullName,
-                               final ClassByteArraySource byteArraySource) {
+    public PrimaryTransformer(final String patchedMethodFullName,
+                              final ClassByteArraySource byteArraySource) {
         final int indexOfLP = patchedMethodFullName.indexOf('(');
         final Pair<String, String> methodNameParts =
                 decomposeMethodName(patchedMethodFullName.substring(0, indexOfLP));
-        this.patchedClassName = methodNameParts.getLeft()
-                .replace('.', '/');
+        this.patchedClassName = methodNameParts.getLeft().replace('.', '/');
         this.patchedMethodFullName = patchedMethodFullName;
         this.cache = new HashMap<>();
         this.byteArraySource = byteArraySource;
@@ -60,9 +72,8 @@ class ProfilerTransformer implements ClassFileTransformer {
             return null; // no transformation
         }
         final ClassReader classReader = new ClassReader(classfileBuffer);
-        final ClassWriter classWriter = new ComputeClassWriter(this.byteArraySource,
-                this.cache, pickFlags(classfileBuffer));
-        final ClassVisitor classVisitor = new TransformerClassVisitor(classfileBuffer,
+        final ClassWriter classWriter = new ComputeClassWriter(this.byteArraySource, this.cache, pickFlags(classfileBuffer));
+        final ClassVisitor classVisitor = new PrimaryTransformerClassVisitor(classfileBuffer,
                 classWriter, this.patchedMethodFullName);
         classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES);
         return classWriter.toByteArray();

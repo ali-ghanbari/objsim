@@ -1,11 +1,24 @@
-/*
- * Copyright (C) UT Dallas - All Rights Reserved.
- * Unauthorized copying of this file via any medium is
- * strictly prohibited.
- * This code base is proprietary and confidential.
- * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
- */
 package edu.utdallas.objsim;
+
+/*
+ * #%L
+ * objsim
+ * %%
+ * Copyright (C) 2020 The University of Texas at Dallas
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
+ */
 
 import edu.utdallas.objectutils.Wrapped;
 import edu.utdallas.objectutils.WrappedObjectArray;
@@ -67,6 +80,8 @@ public class ObjSimEntryPoint {
 
     private final ClassByteArraySource byteArraySource;
 
+    private final String whiteListPrefix;
+
     private final File compatibleJREHome;
 
     private final List<String> childJVMArgs;
@@ -78,6 +93,7 @@ public class ObjSimEntryPoint {
     private ObjSimEntryPoint(final File baseDirectory,
                              final ClassPath classPath,
                              final ClassByteArraySource byteArraySource,
+                             final String whiteListPrefix,
                              final File compatibleJREHome,
                              final List<String> childJVMArgs,
                              final File inputCSVFile,
@@ -85,6 +101,7 @@ public class ObjSimEntryPoint {
         this.baseDirectory = baseDirectory;
         this.classPath = classPath;
         this.byteArraySource = byteArraySource;
+        this.whiteListPrefix = whiteListPrefix;
         this.compatibleJREHome = compatibleJREHome;
         this.childJVMArgs = childJVMArgs;
         this.inputCSVFile = inputCSVFile;
@@ -92,35 +109,39 @@ public class ObjSimEntryPoint {
     }
 
     public static ObjSimEntryPoint createEntryPoint() {
-        return new ObjSimEntryPoint(null, null, null, null, null, null, null);
+        return new ObjSimEntryPoint(null, null, null, null, null, null, null, null);
     }
 
     public ObjSimEntryPoint withBaseDirectory(final File baseDirectory) {
-        return new ObjSimEntryPoint(baseDirectory, this.classPath, this.byteArraySource, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
+        return new ObjSimEntryPoint(baseDirectory, this.classPath, this.byteArraySource, this.whiteListPrefix, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
     }
 
     public ObjSimEntryPoint withClassPath(final ClassPath classPath) {
-        return new ObjSimEntryPoint(this.baseDirectory, classPath, this.byteArraySource, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
+        return new ObjSimEntryPoint(this.baseDirectory, classPath, this.byteArraySource, this.whiteListPrefix, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
     }
 
     public ObjSimEntryPoint withClassByteArraySource(final ClassByteArraySource byteArraySource) {
-        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, byteArraySource, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
+        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, byteArraySource, this.whiteListPrefix, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
+    }
+
+    public ObjSimEntryPoint withWhiteListPrefix(final String whiteListPrefix) {
+        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, whiteListPrefix, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
     }
 
     public ObjSimEntryPoint withCompatibleJREHome(final File compatibleJREHome) {
-        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
+        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.whiteListPrefix, compatibleJREHome, this.childJVMArgs, this.inputCSVFile, this.failingTests);
     }
 
     public ObjSimEntryPoint withChildJVMArgs(final List<String> childJVMArgs) {
-        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.compatibleJREHome, childJVMArgs, this.inputCSVFile, this.failingTests);
+        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.whiteListPrefix, this.compatibleJREHome, childJVMArgs, this.inputCSVFile, this.failingTests);
     }
 
     public ObjSimEntryPoint withInputCSVFile(final File inputCSVFile) {
-        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.compatibleJREHome, this.childJVMArgs, inputCSVFile, this.failingTests);
+        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.whiteListPrefix, this.compatibleJREHome, this.childJVMArgs, inputCSVFile, this.failingTests);
     }
 
     public ObjSimEntryPoint withFailingTests(final Set<String> failingTests) {
-        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, failingTests);
+        return new ObjSimEntryPoint(this.baseDirectory, this.classPath, this.byteArraySource, this.whiteListPrefix, this.compatibleJREHome, this.childJVMArgs, this.inputCSVFile, failingTests);
     }
 
     /**
@@ -156,12 +177,14 @@ public class ObjSimEntryPoint {
 
             // run covering tests on unpatched program
             final Map<String, Wrapped[]> originalSnapshots = Profiler.getSnapshots(defaultProcessArgs,
+                    this.whiteListPrefix,
                     record.patchedMethod,
                     coveringTests);
             // run covering tests on patched program
             final Map<String, Wrapped[]> patchedSnapshots = Profiler.getSnapshots(defaultProcessArgs,
                     targetDirectory,
                     record.classFile,
+                    this.whiteListPrefix,
                     record.patchedMethod,
                     coveringTests);
             final File patchBaseDir = new File(outputDir, "patch-" + record.patchId);

@@ -1,11 +1,24 @@
+package edu.utdallas.objsim.profiler.primary;
+
 /*
- * Copyright (C) UT Dallas - All Rights Reserved.
- * Unauthorized copying of this file via any medium is
- * strictly prohibited.
- * This code base is proprietary and confidential.
- * Written by Ali Ghanbari (ali.ghanbari@utdallas.edu).
+ * #%L
+ * objsim
+ * %%
+ * Copyright (C) 2020 The University of Texas at Dallas
+ * %%
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * #L%
  */
-package edu.utdallas.objsim.profiler;
 
 import edu.utdallas.objsim.commons.asm.MethodUtils;
 import org.objectweb.asm.ClassVisitor;
@@ -14,7 +27,7 @@ import org.objectweb.asm.Type;
 
 import java.lang.reflect.Modifier;
 
-import static edu.utdallas.objsim.commons.misc.MemberNameUtils.composeMethodFullName;
+import static edu.utdallas.objsim.commons.misc.NameUtils.composeMethodFullName;
 import static org.objectweb.asm.Opcodes.ASM7;
 
 /**
@@ -24,16 +37,16 @@ import static org.objectweb.asm.Opcodes.ASM7;
  *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
-public class TransformerClassVisitor extends ClassVisitor {
+class PrimaryTransformerClassVisitor extends ClassVisitor {
     private final byte[] classFileByteArray;
 
     private final String patchedMethodFullName;
 
     private String owner;
 
-    public TransformerClassVisitor(final byte[] classFileByteArray,
-                                   final ClassVisitor classVisitor,
-                                   final String patchedMethodFullName) {
+    public PrimaryTransformerClassVisitor(final byte[] classFileByteArray,
+                                          final ClassVisitor classVisitor,
+                                          final String patchedMethodFullName) {
         super(ASM7, classVisitor);
         this.classFileByteArray = classFileByteArray;
         this.patchedMethodFullName = patchedMethodFullName;
@@ -49,17 +62,17 @@ public class TransformerClassVisitor extends ClassVisitor {
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
         final MethodVisitor defMethodVisitor = super.visitMethod(access, name,
                 descriptor, signature, exceptions);
-        int skip = -1;
+        int skip = 0;
         if (name.equals("<init>")) {
-            skip = MethodUtils.getFirstSpecialInvoke(this.classFileByteArray, descriptor);
-            System.out.printf("INFO: %d SPECIALINVOKE instructions will be skipped.%n", skip + 1);
+            skip = 1 + MethodUtils.getFirstSpecialInvoke(this.classFileByteArray, descriptor);
+//            System.out.printf("INFO: %d INVOKESPECIAL instruction(s) will be skipped.%n", skip);
         }
         final String methodFullName = composeMethodFullName(this.owner, name, descriptor);
         if (this.patchedMethodFullName.equals(methodFullName)) {
             final boolean isStatic = Modifier.isStatic(access);
             final Type[] paramTypes = Type.getArgumentTypes(descriptor);
             final Type retType = Type.getReturnType(descriptor);
-            return new TransformerMethodVisitor(defMethodVisitor, isStatic, paramTypes, retType, skip);
+            return new PrimaryMethodTransformer(defMethodVisitor, isStatic, paramTypes, retType, skip);
         }
         return defMethodVisitor;
     }
