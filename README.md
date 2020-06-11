@@ -17,11 +17,10 @@
 
 ## Introduction
 ObjSim is an automatic patch prioritization system based on the concept of
-similarity among Java Virtual Machine (JVM) objects. Being a syntactically
-independent concept, object similarity makes ObjSim JVM language agnostic
-and allows it to be incorporated with any automatic program repair (APR)
-system targeting JVM-based programming languages. This tool is based on our
-companion [object utilities](https://github.com/ali-ghanbari/object-utils)
+similarity among (JVM) objects. Being a syntactically independent concept,
+object similarity makes ObjSim JVM language agnostic and allows it to be
+incorporated with any automatic program repair (APR) system targeting JVM-based
+programming languages. This tool is uses the companion [object utilities](https://github.com/ali-ghanbari/object-utils)
 library which is open source and is available on Maven central repository.
 
 This repository contains source code of ObjSim as well as instructions for
