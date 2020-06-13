@@ -45,7 +45,7 @@ BibTeX snippet to cite this work.
 }
 ```
 
-You can obtain a copy of the paper form [here](https://ali-ghanbari.github.io/publications/issta20-demo-1.pdf).
+You can obtain a copy of the paper from [here](https://ali-ghanbari.github.io/publications/issta20-demo-1.pdf).
 
 ## ObjSim Setup
 This repository contains source code of ObjSim, so you can directly clone
