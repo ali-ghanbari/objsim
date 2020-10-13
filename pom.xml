@@ -31,7 +31,7 @@
     <properties>
         <pit.version>1.3.2</pit.version>
         <asm.version>7.0</asm.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <objectutils.version>1.3</objectutils.version>
         <relational.version>1.0</relational.version>
         <license.licenseName>apache_v2</license.licenseName>
