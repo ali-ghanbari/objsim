@@ -1,4 +1,4 @@
-package edu.utdallas.objsim.profiler;
+package edu.utdallas.objsim.junit.runner;
 
 /*
  * #%L
@@ -20,24 +20,28 @@ package edu.utdallas.objsim.profiler;
  * #L%
  */
 
-import org.pitest.util.Id;
+import org.pitest.testapi.ResultCollector;
+import org.pitest.testapi.TestUnit;
 
-/**
- * A set of constants used during communication between the child and main process.
- * !Internal use only!
- *
- * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
- */
-public class ControlId {
-    public static final byte DONE = Id.DONE;
+public class WrappingTestUnit implements CloseableTestUnit {
+    private final TestUnit core;
 
-    public static final byte REPORT_METHOD_COVERAGE_MAP = 1;
+    public WrappingTestUnit(final TestUnit core) {
+        this.core = core;
+    }
 
-    public static final byte REPORT_FIELD_ACCESSES_MAP = 2;
+    @Override
+    public void close() {
+        throw new UnsupportedOperationException();
+    }
 
-    public static final byte REPORT_SNAPSHOTS = 4;
+    @Override
+    public void execute(ResultCollector rc) {
+        this.core.execute(rc);
+    }
 
-    public static final byte REPORT_FAILING_TESTS = 8;
-
-    private ControlId() { }
+    @Override
+    public org.pitest.testapi.Description getDescription() {
+        return this.core.getDescription();
+    }
 }

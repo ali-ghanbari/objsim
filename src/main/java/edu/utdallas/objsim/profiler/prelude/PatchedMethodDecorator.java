@@ -22,10 +22,8 @@ package edu.utdallas.objsim.profiler.prelude;
 
 import edu.utdallas.objsim.commons.asm.FinallyBlockAdviceAdapter;
 import org.objectweb.asm.MethodVisitor;
-
-import static org.objectweb.asm.Opcodes.ASM7;
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
-import static org.objectweb.asm.Type.getInternalName;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.Method;
 
 /**
  * A method visitor to configure {@link FieldAccessRecorder} properly upon entering
@@ -35,36 +33,36 @@ import static org.objectweb.asm.Type.getInternalName;
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 class PatchedMethodDecorator extends FinallyBlockAdviceAdapter {
-    private static final String FIELD_ACCESS_RECORDER = getInternalName(FieldAccessRecorder.class);
+    private static final Type FIELD_ACCESS_RECORDER = Type.getType(FieldAccessRecorder.class);
+
+    private final int patchedMethodIndex;
 
     public PatchedMethodDecorator(final MethodVisitor methodVisitor,
-                                  final int invokeSpecialSkips) {
-        super(ASM7, methodVisitor, invokeSpecialSkips);
+                                  final int access,
+                                  final String name,
+                                  final String descriptor,
+                                  final int patchedMethodIndex) {
+        super(ASM7, methodVisitor, access, name, descriptor);
+        this.patchedMethodIndex = patchedMethodIndex;
     }
 
     @Override
-    protected void onMethodEnter() {
+    protected void insertPrelude() {
         incrementCounter();
     }
 
-    private void incrementCounter() {
-        super.visitMethodInsn(INVOKESTATIC,
-                FIELD_ACCESS_RECORDER,
-                "inc",
-                "()V",
-                false);
-    }
-
     @Override
-    protected void onMethodExit(boolean normalExit) {
+    protected void insertSequel(boolean normalExit) {
         decrementCounter();
     }
 
+    private void incrementCounter() {
+        push(this.patchedMethodIndex);
+        invokeStatic(FIELD_ACCESS_RECORDER, Method.getMethod("void inc(int)"));
+    }
+
     private void decrementCounter() {
-        super.visitMethodInsn(INVOKESTATIC,
-                FIELD_ACCESS_RECORDER,
-                "dec",
-                "()V",
-                false);
+        push(this.patchedMethodIndex);
+        invokeStatic(FIELD_ACCESS_RECORDER, Method.getMethod("void dec(int)"));
     }
 }

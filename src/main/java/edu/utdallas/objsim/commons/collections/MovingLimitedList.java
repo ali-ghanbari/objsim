@@ -1,4 +1,4 @@
-package edu.utdallas.objsim.profiler;
+package edu.utdallas.objsim.commons.collections;
 
 /*
  * #%L
@@ -20,24 +20,22 @@ package edu.utdallas.objsim.profiler;
  * #L%
  */
 
-import org.pitest.util.Id;
+import java.util.ArrayDeque;
 
-/**
- * A set of constants used during communication between the child and main process.
- * !Internal use only!
- *
- * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
- */
-public class ControlId {
-    public static final byte DONE = Id.DONE;
+public class MovingLimitedList<E> extends ArrayDeque<E> {
+    private final int capacity;
 
-    public static final byte REPORT_METHOD_COVERAGE_MAP = 1;
+    public MovingLimitedList(int capacity) {
+        super(capacity);
+        this.capacity = capacity;
+    }
 
-    public static final byte REPORT_FIELD_ACCESSES_MAP = 2;
-
-    public static final byte REPORT_SNAPSHOTS = 4;
-
-    public static final byte REPORT_FAILING_TESTS = 8;
-
-    private ControlId() { }
+    @Override
+    public boolean add(final E e) {
+        if (size() >= this.capacity) {
+            pollFirst();
+        }
+        addLast(e);
+        return true;
+    }
 }

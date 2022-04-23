@@ -1,4 +1,4 @@
-package edu.utdallas.objsim.profiler;
+package edu.utdallas.objsim.commons.functional;
 
 /*
  * #%L
@@ -20,24 +20,15 @@ package edu.utdallas.objsim.profiler;
  * #L%
  */
 
-import org.pitest.util.Id;
+import org.pitest.functional.predicate.Predicate;
+
+import java.io.Serializable;
 
 /**
- * A set of constants used during communication between the child and main process.
- * !Internal use only!
  *
+ * @param <T>
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
-public class ControlId {
-    public static final byte DONE = Id.DONE;
+public interface SerializablePredicate<T> extends Predicate<T>, Serializable {
 
-    public static final byte REPORT_METHOD_COVERAGE_MAP = 1;
-
-    public static final byte REPORT_FIELD_ACCESSES_MAP = 2;
-
-    public static final byte REPORT_SNAPSHOTS = 4;
-
-    public static final byte REPORT_FAILING_TESTS = 8;
-
-    private ControlId() { }
 }

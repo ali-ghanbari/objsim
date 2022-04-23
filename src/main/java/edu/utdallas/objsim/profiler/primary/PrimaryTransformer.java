@@ -30,7 +30,9 @@ import org.pitest.classinfo.ClassByteArraySource;
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import static edu.utdallas.objsim.commons.misc.NameUtils.decomposeMethodName;
 import static org.pitest.bytecode.FrameOptions.pickFlags;
@@ -47,19 +49,22 @@ public class PrimaryTransformer implements ClassFileTransformer {
 
     private final Map<String, String> cache;
 
-    private final String patchedClassName;
+    private final Set<String> patchedClasses; // internal names
 
-    private final String patchedMethodFullName;
+    private final Set<String> patchedMethods;
 
-    public PrimaryTransformer(final String patchedMethodFullName,
+    public PrimaryTransformer(final Set<String> patchedMethods,
                               final ClassByteArraySource byteArraySource) {
-        final int indexOfLP = patchedMethodFullName.indexOf('(');
-        final Pair<String, String> methodNameParts =
-                decomposeMethodName(patchedMethodFullName.substring(0, indexOfLP));
-        this.patchedClassName = methodNameParts.getLeft().replace('.', '/');
-        this.patchedMethodFullName = patchedMethodFullName;
-        this.cache = new HashMap<>();
+        final Set<String> patchedClasses = new HashSet<>();
+        for (final String methodName : patchedMethods) {
+            final int indexOfLP = methodName.indexOf('(');
+            final Pair<String, String> methodNameParts = decomposeMethodName(methodName.substring(0, indexOfLP));
+            patchedClasses.add(methodNameParts.getLeft().replace('.', '/'));
+        }
+        this.patchedClasses = patchedClasses;
+        this.patchedMethods = patchedMethods;
         this.byteArraySource = byteArraySource;
+        this.cache = new HashMap<>();
     }
 
     @Override
@@ -68,13 +73,13 @@ public class PrimaryTransformer implements ClassFileTransformer {
                             Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) {
-        if (!this.patchedClassName.equals(className)) {
+        if (className == null || !this.patchedClasses.contains(className)) {
             return null; // no transformation
         }
         final ClassReader classReader = new ClassReader(classfileBuffer);
-        final ClassWriter classWriter = new ComputeClassWriter(this.byteArraySource, this.cache, pickFlags(classfileBuffer));
-        final ClassVisitor classVisitor = new PrimaryTransformerClassVisitor(classfileBuffer,
-                classWriter, this.patchedMethodFullName);
+        final ClassWriter classWriter = new ComputeClassWriter(this.byteArraySource,
+                this.cache, pickFlags(classfileBuffer));
+        final ClassVisitor classVisitor = new PrimaryTransformerClassVisitor(classWriter, this.patchedMethods);
         classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES);
         return classWriter.toByteArray();
     }

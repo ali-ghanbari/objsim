@@ -1,4 +1,4 @@
-package edu.utdallas.objsim.profiler;
+package edu.utdallas.objsim.commons.relational;
 
 /*
  * #%L
@@ -20,24 +20,13 @@ package edu.utdallas.objsim.profiler;
  * #L%
  */
 
-import org.pitest.util.Id;
+public class MethodsDom extends StringDomain {
+    public MethodsDom() {
+        super("M");
+    }
 
-/**
- * A set of constants used during communication between the child and main process.
- * !Internal use only!
- *
- * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
- */
-public class ControlId {
-    public static final byte DONE = Id.DONE;
-
-    public static final byte REPORT_METHOD_COVERAGE_MAP = 1;
-
-    public static final byte REPORT_FIELD_ACCESSES_MAP = 2;
-
-    public static final byte REPORT_SNAPSHOTS = 4;
-
-    public static final byte REPORT_FAILING_TESTS = 8;
-
-    private ControlId() { }
+    public MethodsDom(final String pathName) {
+        this();
+        load(pathName);
+    }
 }

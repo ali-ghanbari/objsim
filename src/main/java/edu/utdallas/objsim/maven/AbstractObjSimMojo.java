@@ -21,7 +21,10 @@ package edu.utdallas.objsim.maven;
  */
 
 import edu.utdallas.objsim.ObjSimEntryPoint;
+import edu.utdallas.objsim.commons.classpath.ClassPathUtils;
+import edu.utdallas.objsim.commons.functional.PredicateFactory;
 import edu.utdallas.objsim.commons.misc.NameUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
@@ -29,17 +32,14 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.pitest.classinfo.CachingByteArraySource;
 import org.pitest.classinfo.ClassByteArraySource;
 import org.pitest.classpath.ClassPath;
-import org.pitest.classpath.ClassPathByteArraySource;
-import org.pitest.classpath.ClassloaderByteArraySource;
-import org.pitest.functional.Option;
+import org.pitest.functional.predicate.Predicate;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,9 +50,11 @@ import java.util.Set;
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 public abstract class AbstractObjSimMojo extends AbstractMojo {
-    private static final int CACHE_SIZE = 200;
-
     protected File compatibleJREHome;
+
+    protected Predicate<String> appClassFilter;
+
+    protected Predicate<String> testClassFilter;
 
     @Parameter(property = "project", readonly = true, required = true)
     protected MavenProject project;
@@ -73,53 +75,47 @@ public abstract class AbstractObjSimMojo extends AbstractMojo {
     @Parameter(property = "inputCSVFile", defaultValue = "input-file.csv")
     protected File inputCSVFile;
 
-    /**
-     * A list of originally failing test cases. You want to tell ObjSim which test
-     * cases, among those that cover a patch location were originally failing.
-     * The test cases should be fully qualified, and in either of the following
-     * forms:
-     * <code>c.t</code>
-     * <code>c:t</code>
-     * <code>c::t</code>
-     * where c is the fully qualified Java name of the test cass and t is the name
-     * of the test method (without parameter lists).
-     */
-    @Parameter(property = "failingTests", required = true)
-    protected Set<String> failingTests;
+    @Parameter(property = "targetClasses")
+    protected Set<String> targetClasses;
 
-    /**
-     * A list of JVM arguments used when creating a child JVM process, i.e. during
-     * profiling.
-     *
-     * If left unspecified, ObjSim will use the following arguments:
-     * "-Xmx16g"
-     */
+    @Parameter(property = "excludedClasses")
+    protected Set<String> excludedClasses;
+
+    @Parameter(property = "excludeTestClasses", defaultValue = "true")
+    protected boolean excludeTestClasses;
+
+    @Parameter(property = "targetTests")
+    protected Set<String> targetTests;
+
+    @Parameter(property = "excludedTests")
+    protected Set<String> excludedTests;
+
+    @Parameter(property = "inputFile", defaultValue = "./input-file.csv")
+    protected File inputFile;
+
+    @Parameter(property = "includeProductionClasses", defaultValue = "true")
+    protected boolean includeProductionClasses;
+
     @Parameter(property = "childJVMArgs")
-    protected List<String> childJVMArgs;
-
-    @Parameter(property = "whiteListPrefix", defaultValue = "${project.groupId}")
-    protected String whiteListPrefix;
+    protected Set<String> childJVMArgs;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         validateAndSanitizeParameters();
 
         final ClassPath classPath = createClassPath();
-        final ClassByteArraySource byteArraySource = createClassByteArraySource(classPath);
+        final ClassByteArraySource byteArraySource = ClassPathUtils.createClassByteArraySource(classPath);
 
-        final File baseDirectory = this.project.getBasedir();
-
+        final File classBuildDirectory = new File(this.project.getBuild().getOutputDirectory());
         try {
-            ObjSimEntryPoint.createEntryPoint()
-                    .withBaseDirectory(baseDirectory)
-                    .withClassByteArraySource(byteArraySource)
-                    .withWhiteListPrefix(this.whiteListPrefix)
-                    .withClassPath(classPath)
-                    .withCompatibleJREHome(this.compatibleJREHome)
-                    .withChildJVMArgs(this.childJVMArgs)
-                    .withInputCSVFile(this.inputCSVFile)
-                    .withFailingTests(this.failingTests)
-                    .run();
+            (new ObjSimEntryPoint(classBuildDirectory,
+                    classPath,
+                    byteArraySource,
+                    this.appClassFilter,
+                    this.testClassFilter,
+                    this.compatibleJREHome,
+                    this.childJVMArgs,
+                    this.inputCSVFile)).run();
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
@@ -132,27 +128,61 @@ public abstract class AbstractObjSimMojo extends AbstractMojo {
         }
         this.compatibleJREHome = new File(jreHome);
         if (!this.compatibleJREHome.isDirectory()) {
-            throw new MojoFailureException("Invalid JAVA_HOME/JRE_HOME");
+            throw new MojoFailureException("Invalid JAVA_HOME");
         }
 
-        if (!this.inputCSVFile.isFile()) {
-            throw new MojoFailureException("Missing and/or invalid input CSV file");
-        }
+        final String groupId = this.project.getGroupId();
 
-        final List<String> temp = new LinkedList<>();
-        for (final String failingTest : this.failingTests) {
-            temp.add(NameUtils.sanitizeTestName(failingTest));
+        if (this.targetTests == null) {
+            this.targetTests = new HashSet<>();
         }
-        this.failingTests.clear();
-        this.failingTests.addAll(temp);
+        if (this.excludedTests == null) {
+            this.excludedTests = new HashSet<>();
+        }
+        if (this.targetTests.isEmpty()) {
+            this.targetTests.add(String.format("%s*Test", groupId));
+            this.targetTests.add(String.format("%s*Tests", groupId));
+            this.targetTests.add(String.format("%s*TestCase*", groupId));
+        }
+        this.testClassFilter = PredicateFactory.and(PredicateFactory.orGlobs(this.targetTests),
+                PredicateFactory.not(PredicateFactory.orGlobs(this.excludedTests)));
 
-        if (this.childJVMArgs == null || this.childJVMArgs.isEmpty()) {
-            this.childJVMArgs = Collections.singletonList("-Xmx16g");
+        if (this.targetClasses == null) {
+            this.targetClasses = new HashSet<>();
         }
+        if (this.excludedClasses == null) {
+            this.excludedClasses = new HashSet<>();
+        }
+        if (this.targetClasses.isEmpty()) {
+            this.targetClasses.add(groupId + "*");
+        }
+        Predicate<String> excludedClassesFilter = PredicateFactory.orGlobs(this.excludedClasses);
+        if (this.excludeTestClasses) {
+            final File testClassesBaseDirectory = new File(this.project.getBuild().getTestOutputDirectory());
+            excludedClassesFilter = PredicateFactory.or(excludedClassesFilter, classFileFilter(testClassesBaseDirectory));
+        }
+        Predicate<String> p = PredicateFactory.orGlobs(this.targetClasses);
+        if (this.includeProductionClasses) {
+            final File classesBaseDirectory = new File(this.project.getBuild().getOutputDirectory());
+            p = PredicateFactory.or(p, classFileFilter(classesBaseDirectory));
+        }
+        this.appClassFilter = PredicateFactory.and(p, PredicateFactory.not(excludedClassesFilter));
 
-        if (this.whiteListPrefix.isEmpty()) {
-            this.whiteListPrefix = this.project.getGroupId();
+        if (this.childJVMArgs == null) {
+            this.childJVMArgs = new HashSet<>();
         }
+        if (this.childJVMArgs.isEmpty()) {
+            this.childJVMArgs.add("-Xmx128g");
+        }
+    }
+
+    public static Predicate<String> classFileFilter(final File classesBaseDirectory) {
+        final Collection<File> classFiles = FileUtils.listFiles(classesBaseDirectory, new String[] {"class"}, true);
+        final Set<String> classes = new HashSet<>();
+        for (final File classFile : classFiles) {
+            classes.add(NameUtils.getClassName(classFile));
+        }
+        return PredicateFactory.fromCollection(classes);
     }
 
     private ClassPath createClassPath() {
@@ -188,26 +218,5 @@ public abstract class AbstractObjSimMojo extends AbstractMojo {
     private boolean isRelevantDep(final Artifact dependency) {
         return dependency.getGroupId().equals("edu.utdallas")
                 && dependency.getArtifactId().equals("objsim");
-    }
-
-    private ClassByteArraySource createClassByteArraySource(final ClassPath classPath) {
-        final ClassPathByteArraySource cpbas = new ClassPathByteArraySource(classPath);
-        final ClassByteArraySource cbas = fallbackToClassLoader(cpbas);
-        return new CachingByteArraySource(cbas, CACHE_SIZE);
-    }
-
-    // credit: this method is adopted from PIT's source code
-    private ClassByteArraySource fallbackToClassLoader(final ClassByteArraySource bas) {
-        final ClassByteArraySource clSource = ClassloaderByteArraySource.fromContext();
-        return new ClassByteArraySource() {
-            @Override
-            public Option<byte[]> getBytes(String clazz) {
-                final Option<byte[]> maybeBytes = bas.getBytes(clazz);
-                if (maybeBytes.hasSome()) {
-                    return maybeBytes;
-                }
-                return clSource.getBytes(clazz);
-            }
-        };
     }
 }

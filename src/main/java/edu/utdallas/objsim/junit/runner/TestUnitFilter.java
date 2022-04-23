@@ -21,7 +21,6 @@ package edu.utdallas.objsim.junit.runner;
  */
 
 import org.pitest.functional.predicate.Predicate;
-import org.pitest.testapi.TestUnit;
 
 import java.util.Collection;
 
@@ -41,10 +40,10 @@ public final class TestUnitFilter {
      * A yes-to-all test unit filter.
      * @return A predicate that always return true
      */
-    public static Predicate<TestUnit> all() {
-        return new Predicate<TestUnit>() {
+    public static Predicate<CloseableTestUnit> all() {
+        return new Predicate<CloseableTestUnit>() {
             @Override
-            public Boolean apply(TestUnit testUnit) {
+            public Boolean apply(final CloseableTestUnit ignored) {
                 return Boolean.TRUE;
             }
         };
@@ -56,10 +55,10 @@ public final class TestUnitFilter {
      * @return A predicates that returns true iff the input test suite name was present in
      *         <code>testUnitNames</code>
      */
-    public static Predicate<TestUnit> some(final Collection<String> testUnitNames) {
-        return new Predicate<TestUnit>() {
+    public static Predicate<CloseableTestUnit> some(final Collection<String> testUnitNames) {
+        return new Predicate<CloseableTestUnit>() {
             @Override
-            public Boolean apply(TestUnit testUnit) {
+            public Boolean apply(final CloseableTestUnit testUnit) {
                 final String testName = sanitizeExtendedTestName(testUnit.getDescription().getName());
                 return testUnitNames.contains(testName);
             }

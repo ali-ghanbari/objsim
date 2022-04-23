@@ -23,14 +23,13 @@ package edu.utdallas.objsim.profiler.primary;
 import edu.utdallas.objectutils.InclusionPredicate;
 import edu.utdallas.objectutils.Wrapped;
 import edu.utdallas.objectutils.Wrapper;
+import edu.utdallas.objsim.commons.collections.MovingLimitedList;
 import edu.utdallas.objsim.commons.relational.FieldsDom;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -41,7 +40,7 @@ import java.util.Set;
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 public final class SnapshotTracker {
-    public static final List<Wrapped> SNAPSHOTS = new LinkedList<>();
+    public static final Collection<Wrapped> SNAPSHOTS = new MovingLimitedList<>(5);
 
     private static final Map<String, Set<String>> accessedFields;
 
@@ -59,13 +58,13 @@ public final class SnapshotTracker {
         };
     }
 
-    private SnapshotTracker() {
+    private SnapshotTracker() { }
 
+    public static void clearAccessFields() {
+        accessedFields.clear();
     }
 
-    public static void setAccessedFields(final FieldsDom fieldsDom,
-                                         final Collection<Integer> fieldIndices) throws Exception {
-        accessedFields.clear();
+    public static void setAccessedFields(final FieldsDom fieldsDom, final int[] fieldIndices) {
         for (final int fieldIndex : fieldIndices) {
             final String fieldFullName = fieldsDom.get(fieldIndex);
             final int indexOfSep = fieldFullName.lastIndexOf('.');
@@ -84,8 +83,10 @@ public final class SnapshotTracker {
      * Regardless of the return type of the patches method, this method should be called
      * before leaving the method.
      *
-     * @param references All references accessible from the patched method, including the object
-     *                   to be returned.
+     * @param references An array with 2 or 3 elements, depending on the fact that the target method is static
+     *                   or virtual. If virtual, the first element of the array will point to <code>this</code>
+     *                   parameter of the method. Two last elements of the array are pointers to (possibly empty)
+     *                   array holding parameters of the target method and its return/thrown exception.
      */
     public static void submitSystemState(final Object[] references) {
         try {

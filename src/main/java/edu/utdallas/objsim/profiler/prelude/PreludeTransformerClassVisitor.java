@@ -20,10 +20,12 @@ package edu.utdallas.objsim.profiler.prelude;
  * #L%
  */
 
-import edu.utdallas.objsim.commons.asm.MethodUtils;
 import edu.utdallas.objsim.commons.relational.FieldsDom;
+import edu.utdallas.objsim.commons.relational.MethodsDom;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
+
+import java.util.Collection;
 
 import static edu.utdallas.objsim.commons.misc.NameUtils.composeMethodFullName;
 import static org.objectweb.asm.Opcodes.ASM7;
@@ -35,23 +37,23 @@ import static org.objectweb.asm.Opcodes.ASM7;
  *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
-public class PreludeTransformerClassVisitor extends ClassVisitor {
-    private final byte[] classFileBytes;
-
-    private final String patchedMethodFullName;
+class PreludeTransformerClassVisitor extends ClassVisitor {
+    private final Collection<String> patchedMethods;
 
     private final FieldsDom fieldsDom;
+
+    private final MethodsDom methodsDom;
 
     private String owner;
 
     public PreludeTransformerClassVisitor(final ClassVisitor classVisitor,
-                                          final byte[] classFileBytes,
-                                          final String patchedMethodFullName,
-                                          final FieldsDom fieldsDom) {
+                                          final FieldsDom fieldsDom,
+                                          final MethodsDom methodsDom,
+                                          final Collection<String> patchedMethods) {
         super(ASM7, classVisitor);
-        this.classFileBytes = classFileBytes;
         this.fieldsDom = fieldsDom;
-        this.patchedMethodFullName = patchedMethodFullName;
+        this.methodsDom = methodsDom;
+        this.patchedMethods = patchedMethods;
     }
 
     @Override
@@ -62,17 +64,13 @@ public class PreludeTransformerClassVisitor extends ClassVisitor {
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-        final MethodVisitor defMethodVisitor = super.visitMethod(access, name, descriptor, signature, exceptions);
-        int skips = 0;
-        if (name.equals("<init>")) {
-            skips = 1 + MethodUtils.getFirstSpecialInvoke(this.classFileBytes, descriptor);
-//            System.out.printf("INFO: %d INVOKESPECIAL instruction(s) will be skipped.%n", skips);
-        }
+        MethodVisitor methodVisitor = super.visitMethod(access, name, descriptor, signature, exceptions);
         final String methodFullName = composeMethodFullName(this.owner, name, descriptor);
-        if (this.patchedMethodFullName.equals(methodFullName)) {
-            final MethodVisitor decorator = new PatchedMethodDecorator(defMethodVisitor, skips);
-            return new FieldAccessRecorderMethodVisitor(decorator, this.fieldsDom);
+        final int methodIndex = this.methodsDom.getOrAdd(methodFullName);
+        if (this.patchedMethods.contains(methodFullName)) {
+            methodVisitor = new PatchedMethodDecorator(methodVisitor, access, name, descriptor, methodIndex);
         }
-        return new FieldAccessRecorderMethodVisitor(defMethodVisitor, this.fieldsDom);
+        methodVisitor = new MethodCoverageTransformer(methodVisitor, access, name, descriptor, methodIndex);
+        return new FieldAccessRecorderMethodVisitor(methodVisitor, access, name, descriptor, this.fieldsDom);
     }
 }

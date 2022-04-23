@@ -23,6 +23,9 @@ package edu.utdallas.objsim.junit.runner;
 import org.pitest.testapi.Description;
 import org.pitest.testapi.ResultCollector;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static edu.utdallas.objsim.commons.misc.NameUtils.sanitizeExtendedTestName;
 
 /**
@@ -31,11 +34,20 @@ import static edu.utdallas.objsim.commons.misc.NameUtils.sanitizeExtendedTestNam
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 class PrinterResultCollector implements ResultCollector {
+    private final Set<String> failingTests;
+
+    public PrinterResultCollector(final Set<String> failingTests) {
+        this.failingTests = failingTests;
+    }
+
     public PrinterResultCollector() {
+        this.failingTests = new HashSet<>();
     }
 
     @Override
     public void notifyEnd(Description description, Throwable t) {
+        final String testName = sanitizeExtendedTestName(description.getName());
+        this.failingTests.add(testName);
         if (t != null) {
             System.out.flush();
             System.err.println();
@@ -43,6 +55,10 @@ class PrinterResultCollector implements ResultCollector {
             System.err.println();
             System.err.flush();
         }
+    }
+
+    public Set<String> getFailingTests() {
+        return this.failingTests;
     }
 
     @Override

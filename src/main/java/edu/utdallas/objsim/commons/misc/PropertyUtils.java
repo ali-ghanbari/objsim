@@ -1,4 +1,4 @@
-package edu.utdallas.objsim.profiler;
+package edu.utdallas.objsim.commons.misc;
 
 /*
  * #%L
@@ -20,24 +20,17 @@ package edu.utdallas.objsim.profiler;
  * #L%
  */
 
-import org.pitest.util.Id;
-
 /**
- * A set of constants used during communication between the child and main process.
- * !Internal use only!
- *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
-public class ControlId {
-    public static final byte DONE = Id.DONE;
+public class PropertyUtils {
+    private PropertyUtils() { }
 
-    public static final byte REPORT_METHOD_COVERAGE_MAP = 1;
+    public static int getIntProperty(final String property, final int defaultVal) {
+        return Integer.parseInt(System.getProperty(property, String.valueOf(defaultVal)));
+    }
 
-    public static final byte REPORT_FIELD_ACCESSES_MAP = 2;
-
-    public static final byte REPORT_SNAPSHOTS = 4;
-
-    public static final byte REPORT_FAILING_TESTS = 8;
-
-    private ControlId() { }
+    public static long getLongProperty(final String property, final long defaultVal) {
+        return Long.parseLong(System.getProperty(property, String.valueOf(defaultVal)));
+    }
 }

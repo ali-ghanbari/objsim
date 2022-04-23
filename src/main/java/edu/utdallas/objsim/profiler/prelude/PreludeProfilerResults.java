@@ -1,4 +1,4 @@
-package edu.utdallas.objsim.profiler;
+package edu.utdallas.objsim.profiler.prelude;
 
 /*
  * #%L
@@ -20,24 +20,20 @@ package edu.utdallas.objsim.profiler;
  * #L%
  */
 
-import org.pitest.util.Id;
+import edu.utdallas.objsim.commons.relational.FieldsDom;
+import edu.utdallas.objsim.commons.relational.MethodsDom;
 
-/**
- * A set of constants used during communication between the child and main process.
- * !Internal use only!
- *
- * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
- */
-public class ControlId {
-    public static final byte DONE = Id.DONE;
+import java.util.Map;
+import java.util.Set;
 
-    public static final byte REPORT_METHOD_COVERAGE_MAP = 1;
+public interface PreludeProfilerResults {
+    FieldsDom getFieldsDom();
 
-    public static final byte REPORT_FIELD_ACCESSES_MAP = 2;
+    MethodsDom getMethodsDom();
 
-    public static final byte REPORT_SNAPSHOTS = 4;
+    Map<Integer, int[]> accessedFieldsMap(); // method index -> accessed fields
 
-    public static final byte REPORT_FAILING_TESTS = 8;
+    Map<String, Set<Integer>> getMethodCoverageMap(); // test name -> covered methods
 
-    private ControlId() { }
+    Set<String> getFailingTests();
 }

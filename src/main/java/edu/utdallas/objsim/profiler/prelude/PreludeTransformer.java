@@ -22,14 +22,17 @@ package edu.utdallas.objsim.profiler.prelude;
 
 import edu.utdallas.objsim.commons.asm.ComputeClassWriter;
 import edu.utdallas.objsim.commons.relational.FieldsDom;
+import edu.utdallas.objsim.commons.relational.MethodsDom;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
 import org.pitest.classinfo.ClassByteArraySource;
+import org.pitest.functional.predicate.Predicate;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,23 +48,32 @@ import static org.pitest.bytecode.FrameOptions.pickFlags;
 public class PreludeTransformer implements ClassFileTransformer {
     private final ClassByteArraySource byteArraySource;
 
-    private final String whiteListPrefix;
+    private final Predicate<String> appClassFilter;
 
-    private final String patchedMethodFullName;
+    private final Collection<String> patchedMethods;
 
     private final FieldsDom fieldsDom;
+
+    private final MethodsDom methodsDom;
 
     private final Map<String, String> cache;
 
     public PreludeTransformer(final ClassByteArraySource byteArraySource,
-                              final String whiteListPrefix,
-                              final String patchedMethodFullName,
-                              final FieldsDom fieldsDom) {
+                              final Predicate<String> appClassFilter,
+                              final Collection<String> patchedMethods,
+                              final FieldsDom fieldsDom,
+                              final MethodsDom methodsDom) {
         this.byteArraySource = byteArraySource;
-        this.whiteListPrefix = whiteListPrefix.replace('.', '/');
-        this.patchedMethodFullName = patchedMethodFullName;
+        this.appClassFilter = appClassFilter;
+        this.patchedMethods = patchedMethods;
         this.fieldsDom = fieldsDom;
+        this.methodsDom = methodsDom;
         this.cache = new HashMap<>();
+    }
+
+    private boolean isAppClass(String className) {
+        className = className.replace('/', '.');
+        return this.appClassFilter.apply(className);
     }
 
     @Override
@@ -70,14 +82,23 @@ public class PreludeTransformer implements ClassFileTransformer {
                             Class<?> classBeingRedefined,
                             ProtectionDomain protectionDomain,
                             byte[] classfileBuffer) throws IllegalClassFormatException {
-        if (!className.startsWith(this.whiteListPrefix)) {
-            return null; // no transformation
+        try {
+            if (className == null || !isAppClass(className)) {
+                return null; // no transformation
+            }
+            final ClassReader classReader = new ClassReader(classfileBuffer);
+            final ClassWriter classWriter = new ComputeClassWriter(this.byteArraySource,
+                    this.cache,
+                    pickFlags(classfileBuffer));
+            final ClassVisitor classVisitor = new PreludeTransformerClassVisitor(classWriter,
+                    this.fieldsDom,
+                    this.methodsDom,
+                    this.patchedMethods);
+            classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES);
+            return classWriter.toByteArray();
+        } catch (Throwable t) {
+            t.printStackTrace(System.out);
         }
-        final ClassReader classReader = new ClassReader(classfileBuffer);
-        final ClassWriter classWriter = new ComputeClassWriter(this.byteArraySource, this.cache, pickFlags(classfileBuffer));
-        final ClassVisitor classVisitor = new PreludeTransformerClassVisitor(classWriter,
-                classfileBuffer, this.patchedMethodFullName, this.fieldsDom);
-        classReader.accept(classVisitor, ClassReader.EXPAND_FRAMES);
-        return classWriter.toByteArray();
+        return null;
     }
 }

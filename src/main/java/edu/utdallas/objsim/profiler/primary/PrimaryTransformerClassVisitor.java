@@ -20,12 +20,10 @@ package edu.utdallas.objsim.profiler.primary;
  * #L%
  */
 
-import edu.utdallas.objsim.commons.asm.MethodUtils;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
 
-import java.lang.reflect.Modifier;
+import java.util.Set;
 
 import static edu.utdallas.objsim.commons.misc.NameUtils.composeMethodFullName;
 import static org.objectweb.asm.Opcodes.ASM7;
@@ -38,18 +36,13 @@ import static org.objectweb.asm.Opcodes.ASM7;
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 class PrimaryTransformerClassVisitor extends ClassVisitor {
-    private final byte[] classFileByteArray;
-
-    private final String patchedMethodFullName;
+    private final Set<String> patchedMethods;
 
     private String owner;
 
-    public PrimaryTransformerClassVisitor(final byte[] classFileByteArray,
-                                          final ClassVisitor classVisitor,
-                                          final String patchedMethodFullName) {
+    public PrimaryTransformerClassVisitor(final ClassVisitor classVisitor, final Set<String> patchedMethods) {
         super(ASM7, classVisitor);
-        this.classFileByteArray = classFileByteArray;
-        this.patchedMethodFullName = patchedMethodFullName;
+        this.patchedMethods = patchedMethods;
     }
 
     @Override
@@ -60,19 +53,10 @@ class PrimaryTransformerClassVisitor extends ClassVisitor {
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String descriptor, String signature, String[] exceptions) {
-        final MethodVisitor defMethodVisitor = super.visitMethod(access, name,
-                descriptor, signature, exceptions);
-        int skip = 0;
-        if (name.equals("<init>")) {
-            skip = 1 + MethodUtils.getFirstSpecialInvoke(this.classFileByteArray, descriptor);
-//            System.out.printf("INFO: %d INVOKESPECIAL instruction(s) will be skipped.%n", skip);
-        }
+        final MethodVisitor defMethodVisitor = super.visitMethod(access, name, descriptor, signature, exceptions);
         final String methodFullName = composeMethodFullName(this.owner, name, descriptor);
-        if (this.patchedMethodFullName.equals(methodFullName)) {
-            final boolean isStatic = Modifier.isStatic(access);
-            final Type[] paramTypes = Type.getArgumentTypes(descriptor);
-            final Type retType = Type.getReturnType(descriptor);
-            return new PrimaryMethodTransformer(defMethodVisitor, isStatic, paramTypes, retType, skip);
+        if (this.patchedMethods.contains(methodFullName)) {
+            return new PrimaryMethodTransformer(defMethodVisitor, access, name, descriptor);
         }
         return defMethodVisitor;
     }

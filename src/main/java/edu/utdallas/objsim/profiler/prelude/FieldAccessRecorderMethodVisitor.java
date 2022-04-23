@@ -22,13 +22,13 @@ package edu.utdallas.objsim.profiler.prelude;
 
 import edu.utdallas.objsim.commons.relational.FieldsDom;
 import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.GeneratorAdapter;
+import org.objectweb.asm.commons.Method;
 
-import static edu.utdallas.objsim.commons.asm.MethodBodyUtils.pushInteger;
 import static org.objectweb.asm.Opcodes.ASM7;
 import static org.objectweb.asm.Opcodes.GETFIELD;
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 import static org.objectweb.asm.Opcodes.PUTFIELD;
-import static org.objectweb.asm.Type.getInternalName;
 
 /**
  * A method visitor for instrumenting the target program so as to keep track of
@@ -37,14 +37,17 @@ import static org.objectweb.asm.Type.getInternalName;
  *
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
-public class FieldAccessRecorderMethodVisitor extends MethodVisitor {
-    private static final String FIELD_ACCESS_RECORDER = getInternalName(FieldAccessRecorder.class);
+class FieldAccessRecorderMethodVisitor extends GeneratorAdapter {
+    private static final Type FIELD_ACCESS_RECORDER = Type.getType(FieldAccessRecorder.class);
 
     private final FieldsDom fieldsDom;
 
-    public FieldAccessRecorderMethodVisitor(final MethodVisitor methodVisitor,
+    public FieldAccessRecorderMethodVisitor(final MethodVisitor mv,
+                                            final int access,
+                                            final String name,
+                                            final String desc,
                                             final FieldsDom fieldsDom) {
-        super(ASM7, methodVisitor);
+        super(ASM7, mv, access, name, desc);
         this.fieldsDom = fieldsDom;
     }
 
@@ -52,22 +55,13 @@ public class FieldAccessRecorderMethodVisitor extends MethodVisitor {
     public void visitFieldInsn(int opcode, String owner, String name, String descriptor) {
         if (opcode == GETFIELD || opcode == PUTFIELD) {
             final int fieldIndex = this.fieldsDom.getOrAdd(getFieldFullName(owner, name));
-            pushInteger(this.mv, fieldIndex);
-            super.visitMethodInsn(INVOKESTATIC,
-                    FIELD_ACCESS_RECORDER,
-                    "registerFieldAccess",
-                    "(I)V",
-                    false);
+            push(fieldIndex);
+            invokeStatic(FIELD_ACCESS_RECORDER, Method.getMethod("void registerFieldAccess(int)"));
         }
         super.visitFieldInsn(opcode, owner, name, descriptor);
     }
 
     private static String getFieldFullName(final String owner, final String name) {
         return owner.replace('/', '.') + "." + name;
-    }
-
-    @Override
-    public void visitMaxs(int maxStack, int maxLocals) {
-        super.visitMaxs(1 + maxStack, maxLocals);
     }
 }

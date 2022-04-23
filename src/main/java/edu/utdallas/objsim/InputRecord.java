@@ -20,11 +20,13 @@ package edu.utdallas.objsim;
  * #L%
  */
 
-import edu.utdallas.objsim.commons.misc.NameUtils;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.commons.lang3.Validate;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Corresponds to each row of the input CSV file
@@ -35,36 +37,40 @@ import java.io.File;
 class InputRecord {
     final int patchId;
 
-    final double suspVal;
+    final Set<String> patchedMethods; // full names
 
-    final String patchedMethod; // full name
+    final Set<File> classFiles;
 
-    final File classFile;
-
-    final String[] coveringTests;
+    final String groundTruthLabel;
 
     private InputRecord(final int patchId,
-                        final double suspVal,
-                        final String patchedMethod,
-                        final File classFile,
-                        final String[] coveringTests) {
+                        final String[] patchedMethods,
+                        final String[] classFileNames,
+                        final String groundTruthLabel) {
         this.patchId = patchId;
-        this.suspVal = suspVal;
-        this.patchedMethod = patchedMethod;
-        this.classFile = classFile;
-        this.coveringTests = coveringTests;
+        this.patchedMethods = new HashSet<>();
+        Collections.addAll(this.patchedMethods, patchedMethods);
+        final Iterator<String> pmit = this.patchedMethods.iterator();
+        while (pmit.hasNext()) {
+            if (pmit.next().startsWith("NOT-")) {
+                pmit.remove();
+            }
+        }
+        if (this.patchedMethods.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        this.classFiles = new HashSet<>();
+        for (final String classFileName : classFileNames) {
+            this.classFiles.add(new File(classFileName));
+        }
+        this.groundTruthLabel = groundTruthLabel;
     }
 
     static InputRecord fromCSVRecord(final CSVRecord record) {
-        Validate.isTrue(record.size() == 5);
         final int patchId = Integer.parseInt(record.get(0));
-        final double suspVal = Double.parseDouble(record.get(1));
-        final String patchedMethod = record.get(2);
-        final File classFile = new File(record.get(3));
-        final String[] coveringTests = record.get(4).split("\\s");
-        for  (int i = 0; i < coveringTests.length; i++) {
-            coveringTests[i] = NameUtils.sanitizeTestName(coveringTests[i]);
-        }
-        return new InputRecord(patchId, suspVal, patchedMethod, classFile, coveringTests);
+        final String[] patchedMethods = record.get(2).split(";");
+        final String[] classFileNames = record.get(3).split(";");
+        final String groundTruthLabel = record.get(4);
+        return new InputRecord(patchId, patchedMethods, classFileNames, groundTruthLabel);
     }
 }

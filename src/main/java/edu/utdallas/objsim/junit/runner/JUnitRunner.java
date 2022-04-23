@@ -20,11 +20,21 @@ package edu.utdallas.objsim.junit.runner;
  * #L%
  */
 
+import edu.utdallas.objsim.constants.Params;
 import org.pitest.functional.predicate.Predicate;
 import org.pitest.testapi.ResultCollector;
 import org.pitest.testapi.TestUnit;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import static edu.utdallas.objsim.junit.JUnitUtils.discoverTestUnits;
 
 /**
  * A set of utility methods for running JUnit test cases.
@@ -33,20 +43,44 @@ import java.util.List;
  * @author Ali Ghanbari (ali.ghanbari@utdallas.edu)
  */
 public class JUnitRunner {
-    private List<TestUnit> testUnits;
+    private static final ExecutorService EXECUTOR_SERVICE;
+
+    static {
+        EXECUTOR_SERVICE = Executors.newSingleThreadExecutor();
+    }
+
+
+    private List<CloseableTestUnit> testUnits;
 
     private final ResultCollector resultCollector;
 
-    public JUnitRunner(final List<TestUnit> testUnits) {
-        this.testUnits = testUnits;
-        this.resultCollector = new PrinterResultCollector();
+    private final HashSet<String> failingTests;
+
+    public JUnitRunner(final Collection<String> testClassNames) {
+        this.testUnits = discoverTestUnits(testClassNames);
+        this.failingTests = new HashSet<>();
+        this.resultCollector = new PrinterResultCollector(this.failingTests);
     }
 
-    public List<TestUnit> getTestUnits() {
+    public JUnitRunner(final List<CloseableTestUnit> testUnits) {
+        this.testUnits = testUnits;
+        this.failingTests = new HashSet<>();
+        this.resultCollector = new PrinterResultCollector(this.failingTests);
+    }
+
+    public List<CloseableTestUnit> getTestUnits() {
         return this.testUnits;
     }
 
-    public void setTestUnits(List<TestUnit> testUnits) {
+    public ResultCollector getResultCollector() {
+        return this.resultCollector;
+    }
+
+    public HashSet<String> getFailingTests() {
+        return this.failingTests;
+    }
+
+    public void setTestUnits(List<CloseableTestUnit> testUnits) {
         this.testUnits = testUnits;
     }
 
@@ -66,12 +100,31 @@ public class JUnitRunner {
      *                  executed.
      * @return <code>true</code> iff all the admitted test cases passed.
      */
-    public boolean run(final Predicate<TestUnit> shouldRun) {
-        for (final TestUnit testUnit : this.testUnits) {
+    public boolean run(final Predicate<CloseableTestUnit> shouldRun) {
+        for (final CloseableTestUnit testUnit : this.testUnits) {
             if (!shouldRun.apply(testUnit)) {
                 continue;
             }
-            testUnit.execute(this.resultCollector);
+            final Runnable task = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        testUnit.execute(JUnitRunner.this.resultCollector);
+                    } catch (Throwable t) {
+                        t.printStackTrace();
+                    }
+                }
+            };
+            try {
+                EXECUTOR_SERVICE.submit(task).get(Params.MAX_TIMEOUT_MINS, TimeUnit.MINUTES);
+            } catch (TimeoutException e) {
+                System.out.println("WARNING: Running the test case is terminated due to timeout.");
+                testUnit.close();
+                continue;
+            } catch (InterruptedException | ExecutionException e) {
+                e.printStackTrace(System.out);
+                return false;
+            }
             if (this.resultCollector.shouldExit()) {
                 System.out.println("WARNING: Running test cases is terminated.");
                 return false;
